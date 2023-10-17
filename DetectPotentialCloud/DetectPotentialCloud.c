@@ -11,8 +11,7 @@
 
 /* Include files */
 #include "DetectPotentialCloud.h"
-#include "DetectPotentialCloud_emxutil.h"
-#include "DetectPotentialCloud_types.h"
+#include "emx/emxutil.h"
 #include "ixfun.h"
 #include "prctile.h"
 #include "problSpectralVaribility.h"

@@ -13,7 +13,7 @@
 #define DETECTPOTENTIALCLOUD_H
 
 /* Include files */
-#include "DetectPotentialCloud_types.h"
+#include "emx/types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>
