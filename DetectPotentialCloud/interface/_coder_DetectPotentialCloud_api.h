@@ -34,18 +34,11 @@ struct emxArray_char_T {
 typedef struct emxArray_char_T emxArray_char_T;
 #endif /* typedef_emxArray_char_T */
 
-#ifndef typedef_rtString
-#define typedef_rtString
-typedef struct {
-  emxArray_char_T *Value;
-} rtString;
-#endif /* typedef_rtString */
-
 #ifndef typedef_ObjMeta
 #define typedef_ObjMeta
 typedef struct {
-  rtString Name;
-  rtString Sensor;
+  emxArray_char_T *Name;
+  emxArray_char_T *Sensor;
   real_T Resolution[4];
   real_T Dim[2];
   real_T UL[2];
@@ -53,7 +46,7 @@ typedef struct {
   real_T Azi;
   real_T ZC[2];
   real_T BBox[4];
-  rtString Output;
+  emxArray_char_T *Output;
 } ObjMeta;
 #endif /* typedef_ObjMeta */
 
@@ -125,20 +118,12 @@ typedef struct {
 } struct0_T;
 #endif /* typedef_struct0_T */
 
-#ifndef struct_emxArray_real_T
-#define struct_emxArray_real_T
-struct emxArray_real_T {
-  real_T *data;
-  int32_T *size;
-  int32_T allocatedSize;
-  int32_T numDimensions;
-  boolean_T canFreeData;
-};
-#endif /* struct_emxArray_real_T */
-#ifndef typedef_emxArray_real_T
-#define typedef_emxArray_real_T
-typedef struct emxArray_real_T emxArray_real_T;
-#endif /* typedef_emxArray_real_T */
+#ifndef typedef_struct1_T
+#define typedef_struct1_T
+typedef struct {
+  emxArray_real32_T *Z;
+} struct1_T;
+#endif /* typedef_struct1_T */
 
 /* Variable Declarations */
 extern emlrtCTX emlrtRootTLSGlobal;
@@ -151,13 +136,14 @@ extern "C" {
 /* Function Declarations */
 void DetectPotentialCloud(ObjMeta *data_meta, emxArray_boolean_T *mask,
                           emxArray_uint8_T *water, struct0_T *data_toabt,
-                          emxArray_real_T *dem, emxArray_real32_T *ndvi,
+                          struct1_T *dem, emxArray_real32_T *ndvi,
                           emxArray_real32_T *ndsi, emxArray_real32_T *ndbi,
                           emxArray_boolean_T *idplcd,
                           emxArray_real32_T *whiteness, emxArray_real32_T *HOT,
-                          real_T wpt, real_T cldprob, real_T *sum_clr,
-                          emxArray_uint8_T *cloud, emxArray_boolean_T *idused,
-                          real32_T *t_templ, real32_T *t_temph);
+                          emxArray_real32_T *wpt, emxArray_real32_T *cldprob,
+                          real_T *sum_clr, emxArray_uint8_T *cloud,
+                          emxArray_boolean_T *idused, real32_T *t_templ,
+                          real32_T *t_temph);
 
 void DetectPotentialCloud_api(const mxArray *const prhs[13], int32_T nlhs,
                               const mxArray *plhs[5]);

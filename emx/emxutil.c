@@ -3,15 +3,15 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * DetectPotentialCloud_emxutil.c
+ * emxutil.c
  *
- * Code generation for function 'DetectPotentialCloud_emxutil'
+ * Code generation
  *
  */
 
 /* Include files */
-#include "DetectPotentialCloud_emxutil.h"
-#include "DetectPotentialCloud_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "rt_nonfinite.h"
 #include <stdlib.h>
 #include <string.h>
@@ -174,7 +174,7 @@ void emxFreeStruct_ObjMeta(ObjMeta *pStruct)
   emxFree_char_T(&pStruct->Output);
 }
 
-void emxFreeStruct_struct0_T(struct0_T *pStruct)
+void emxFreeStruct_struct0_T(ObjTOABT *pStruct)
 {
   emxFree_real32_T(&pStruct->BandCA);
   emxFree_real32_T(&pStruct->BandBlue);
@@ -195,7 +195,7 @@ void emxFreeStruct_struct0_T(struct0_T *pStruct)
   emxFree_boolean_T(&pStruct->SatuRed);
 }
 
-void emxFreeStruct_struct1_T(struct1_T *pStruct)
+void emxFreeStruct_struct1_T(GRIDobj *pStruct)
 {
   emxFree_real32_T(&pStruct->Z);
 }
@@ -269,7 +269,7 @@ void emxInitStruct_ObjMeta(ObjMeta *pStruct)
   emxInit_char_T(&pStruct->Output, 2);
 }
 
-void emxInitStruct_struct0_T(struct0_T *pStruct)
+void emxInitStruct_struct0_T(GRIDobj *pStruct)
 {
   emxInit_real32_T(&pStruct->BandCA, 2);
   emxInit_real32_T(&pStruct->BandBlue, 2);
@@ -372,4 +372,4 @@ void emxInit_uint8_T(emxArray_uint8_T **pEmxArray, int numDimensions)
   }
 }
 
-/* End of code generation (DetectPotentialCloud_emxutil.c) */
+/* End of code generation */

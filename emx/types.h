@@ -3,17 +3,31 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * DetectPotentialCloud_types.h
- *
- * Code generation for function 'DetectPotentialCloud'
+ * types.h
  *
  */
 
-#ifndef DETECTPOTENTIALCLOUD_TYPES_H
-#define DETECTPOTENTIALCLOUD_TYPES_H
+#ifndef DETECTPOTENTIALPIXELS_TYPES_H
+#define DETECTPOTENTIALPIXELS_TYPES_H
 
 /* Include files */
 #include "rtwtypes.h"
+
+/* Type Definitions */
+#ifndef struct_emxArray_boolean_T
+#define struct_emxArray_boolean_T
+struct emxArray_boolean_T {
+  boolean_T *data;
+  int *size;
+  int allocatedSize;
+  int numDimensions;
+  boolean_T canFreeData;
+};
+#endif /* struct_emxArray_boolean_T */
+#ifndef typedef_emxArray_boolean_T
+#define typedef_emxArray_boolean_T
+typedef struct emxArray_boolean_T emxArray_boolean_T;
+#endif /* typedef_emxArray_boolean_T */
 
 /* Type Definitions */
 #ifndef struct_emxArray_char_T
@@ -30,37 +44,6 @@ struct emxArray_char_T {
 #define typedef_emxArray_char_T
 typedef struct emxArray_char_T emxArray_char_T;
 #endif /* typedef_emxArray_char_T */
-
-#ifndef typedef_ObjMeta
-#define typedef_ObjMeta
-typedef struct {
-  emxArray_char_T *Name;
-  emxArray_char_T *Sensor;
-  double Resolution[4];
-  double Dim[2];
-  double UL[2];
-  double Zen;
-  double Azi;
-  double ZC[2];
-  double BBox[4];
-  emxArray_char_T *Output;
-} ObjMeta;
-#endif /* typedef_ObjMeta */
-
-#ifndef struct_emxArray_boolean_T
-#define struct_emxArray_boolean_T
-struct emxArray_boolean_T {
-  boolean_T *data;
-  int *size;
-  int allocatedSize;
-  int numDimensions;
-  boolean_T canFreeData;
-};
-#endif /* struct_emxArray_boolean_T */
-#ifndef typedef_emxArray_boolean_T
-#define typedef_emxArray_boolean_T
-typedef struct emxArray_boolean_T emxArray_boolean_T;
-#endif /* typedef_emxArray_boolean_T */
 
 #ifndef struct_emxArray_uint8_T
 #define struct_emxArray_uint8_T
@@ -92,8 +75,38 @@ struct emxArray_real32_T {
 typedef struct emxArray_real32_T emxArray_real32_T;
 #endif /* typedef_emxArray_real32_T */
 
-#ifndef typedef_struct0_T
-#define typedef_struct0_T
+#ifndef struct_emxArray_real_T
+#define struct_emxArray_real_T
+struct emxArray_real_T {
+  double *data;
+  int *size;
+  int allocatedSize;
+  int numDimensions;
+  boolean_T canFreeData;
+};
+#endif /* struct_emxArray_real_T */
+#ifndef typedef_emxArray_real_T
+#define typedef_emxArray_real_T
+typedef struct emxArray_real_T emxArray_real_T;
+#endif /* typedef_emxArray_real_T */
+
+#ifndef struct_emxArray_int32_T
+#define struct_emxArray_int32_T
+struct emxArray_int32_T {
+  int *data;
+  int *size;
+  int allocatedSize;
+  int numDimensions;
+  boolean_T canFreeData;
+};
+#endif /* struct_emxArray_int32_T */
+#ifndef typedef_emxArray_int32_T
+#define typedef_emxArray_int32_T
+typedef struct emxArray_int32_T emxArray_int32_T;
+#endif /* typedef_emxArray_int32_T */
+
+#ifndef typedef_ObjTOABT
+#define typedef_ObjTOABT
 typedef struct {
   emxArray_real32_T *BandCA;
   emxArray_real32_T *BandBlue;
@@ -112,30 +125,31 @@ typedef struct {
   emxArray_boolean_T *SatuBlue;
   emxArray_boolean_T *SatuGreen;
   emxArray_boolean_T *SatuRed;
-} struct0_T;
-#endif /* typedef_struct0_T */
+} ObjTOABT;
+#endif /* typedef_ObjTOABT */
 
-#ifndef typedef_struct1_T
-#define typedef_struct1_T
+#ifndef typedef_ObjMeta
+#define typedef_ObjMeta
+typedef struct {
+  emxArray_char_T *Name;
+  emxArray_char_T *Sensor;
+  double Resolution[4];
+  double Dim[2];
+  double UL[2];
+  double Zen;
+  double Azi;
+  double ZC[2];
+  double BBox[4];
+  emxArray_char_T *Output;
+} ObjMeta;
+#endif /* typedef_ObjMeta */
+
+#ifndef typedef_GRIDobj
+#define typedef_GRIDobj
 typedef struct {
   emxArray_real32_T *Z;
-} struct1_T;
+} GRIDobj;
 #endif /* typedef_struct1_T */
 
-#ifndef struct_emxArray_int32_T
-#define struct_emxArray_int32_T
-struct emxArray_int32_T {
-  int *data;
-  int *size;
-  int allocatedSize;
-  int numDimensions;
-  boolean_T canFreeData;
-};
-#endif /* struct_emxArray_int32_T */
-#ifndef typedef_emxArray_int32_T
-#define typedef_emxArray_int32_T
-typedef struct emxArray_int32_T emxArray_int32_T;
-#endif /* typedef_emxArray_int32_T */
-
 #endif
-/* End of code generation (DetectPotentialCloud_types.h) */
+/* End of code generation (DetectPotentialPixels_types.h) */

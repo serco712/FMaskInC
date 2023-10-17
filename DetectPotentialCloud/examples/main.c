@@ -59,9 +59,9 @@ static float argInit_real32_T(void);
 
 static double argInit_real_T(void);
 
-static rtString argInit_rtString(void);
-
 static void argInit_struct0_T(struct0_T *result);
+
+static struct1_T argInit_struct1_T(void);
 
 static unsigned char argInit_uint8_T(void);
 
@@ -70,8 +70,6 @@ static emxArray_boolean_T *c_argInit_UnboundedxUnbounded_b(void);
 static emxArray_real32_T *c_argInit_UnboundedxUnbounded_r(void);
 
 static emxArray_uint8_T *c_argInit_UnboundedxUnbounded_u(void);
-
-static emxArray_real_T *d_argInit_UnboundedxUnbounded_r(void);
 
 /* Function Definitions */
 static void argInit_1x2_real_T(double result[2])
@@ -125,13 +123,13 @@ Change this value to the value that the application requires. */
   argInit_1x2_real_T(result->Dim);
   result_tmp = argInit_real_T();
   result->Azi = result_tmp;
-  result->Name = argInit_rtString();
-  result->Sensor = argInit_rtString();
+  result->Name = argInit_1xUnbounded_char_T();
+  result->Sensor = argInit_1xUnbounded_char_T();
   argInit_2x2_real_T(result->Resolution);
   result->Zen = result_tmp;
   argInit_1x2_real_T(result->ZC);
   argInit_2x2_real_T(result->BBox);
-  result->Output = argInit_rtString();
+  result->Output = argInit_1xUnbounded_char_T();
   result->UL[0] = result->Dim[0];
   result->UL[1] = result->Dim[1];
 }
@@ -156,15 +154,6 @@ static double argInit_real_T(void)
   return 0.0;
 }
 
-static rtString argInit_rtString(void)
-{
-  rtString result;
-  /* Set the value of each structure field.
-Change this value to the value that the application requires. */
-  result.Value = argInit_1xUnbounded_char_T();
-  return result;
-}
-
 static void argInit_struct0_T(struct0_T *result)
 {
   /* Set the value of each structure field.
@@ -186,6 +175,15 @@ Change this value to the value that the application requires. */
   result->SatuBlue = c_argInit_UnboundedxUnbounded_b();
   result->SatuGreen = c_argInit_UnboundedxUnbounded_b();
   result->SatuRed = c_argInit_UnboundedxUnbounded_b();
+}
+
+static struct1_T argInit_struct1_T(void)
+{
+  struct1_T result;
+  /* Set the value of each structure field.
+Change this value to the value that the application requires. */
+  result.Z = c_argInit_UnboundedxUnbounded_r();
+  return result;
 }
 
 static unsigned char argInit_uint8_T(void)
@@ -256,27 +254,6 @@ Change this value to the value that the application requires. */
   return result;
 }
 
-static emxArray_real_T *d_argInit_UnboundedxUnbounded_r(void)
-{
-  emxArray_real_T *result;
-  double *result_data;
-  int idx0;
-  int idx1;
-  /* Set the size of the array.
-Change this size to the value that the application requires. */
-  result = emxCreate_real_T(2, 2);
-  result_data = result->data;
-  /* Loop over the array to initialize each element. */
-  for (idx0 = 0; idx0 < result->size[0U]; idx0++) {
-    for (idx1 = 0; idx1 < result->size[1U]; idx1++) {
-      /* Set the value of the array element.
-Change this value to the value that the application requires. */
-      result_data[idx0 + result->size[0] * idx1] = argInit_real_T();
-    }
-  }
-  return result;
-}
-
 int main(int argc, char **argv)
 {
   (void)argc;
@@ -299,16 +276,17 @@ void main_DetectPotentialCloud(void)
   emxArray_boolean_T *idused;
   emxArray_boolean_T *mask;
   emxArray_real32_T *HOT;
+  emxArray_real32_T *cldprob;
   emxArray_real32_T *ndbi;
   emxArray_real32_T *ndsi;
   emxArray_real32_T *ndvi;
   emxArray_real32_T *whiteness;
-  emxArray_real_T *dem;
+  emxArray_real32_T *wpt;
   emxArray_uint8_T *cloud;
   emxArray_uint8_T *water;
   struct0_T data_toabt;
+  struct1_T dem;
   double sum_clr;
-  double wpt_tmp;
   float t_temph;
   float t_templ;
   /* Initialize function 'DetectPotentialCloud' input arguments. */
@@ -321,7 +299,7 @@ void main_DetectPotentialCloud(void)
   /* Initialize function input argument 'data_toabt'. */
   argInit_struct0_T(&data_toabt);
   /* Initialize function input argument 'dem'. */
-  dem = d_argInit_UnboundedxUnbounded_r();
+  dem = argInit_struct1_T();
   /* Initialize function input argument 'ndvi'. */
   ndvi = c_argInit_UnboundedxUnbounded_r();
   /* Initialize function input argument 'ndsi'. */
@@ -334,20 +312,25 @@ void main_DetectPotentialCloud(void)
   whiteness = c_argInit_UnboundedxUnbounded_r();
   /* Initialize function input argument 'HOT'. */
   HOT = c_argInit_UnboundedxUnbounded_r();
-  wpt_tmp = argInit_real_T();
+  /* Initialize function input argument 'wpt'. */
+  wpt = c_argInit_UnboundedxUnbounded_r();
+  /* Initialize function input argument 'cldprob'. */
+  cldprob = c_argInit_UnboundedxUnbounded_r();
   /* Call the entry-point 'DetectPotentialCloud'. */
   emxInitArray_uint8_T(&cloud, 2);
   emxInitArray_boolean_T(&idused, 2);
-  DetectPotentialCloud(&data_meta, mask, water, &data_toabt, dem, ndvi, ndsi,
-                       ndbi, idplcd, whiteness, HOT, wpt_tmp, wpt_tmp, &sum_clr,
+  DetectPotentialCloud(&data_meta, mask, water, &data_toabt, &dem, ndvi, ndsi,
+                       ndbi, idplcd, whiteness, HOT, wpt, cldprob, &sum_clr,
                        cloud, idused, &t_templ, &t_temph);
+  emxDestroyArray_real32_T(cldprob);
+  emxDestroyArray_real32_T(wpt);
   emxDestroyArray_real32_T(HOT);
   emxDestroyArray_real32_T(whiteness);
   emxDestroyArray_boolean_T(idplcd);
   emxDestroyArray_real32_T(ndbi);
   emxDestroyArray_real32_T(ndsi);
   emxDestroyArray_real32_T(ndvi);
-  emxDestroyArray_real_T(dem);
+  emxDestroy_struct1_T(dem);
   emxDestroy_struct0_T(data_toabt);
   emxDestroyArray_uint8_T(water);
   emxDestroyArray_boolean_T(mask);
