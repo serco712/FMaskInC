@@ -7,8 +7,8 @@
  *
  */
 
-#ifndef DETECTPOTENTIALPIXELS_TYPES_H
-#define DETECTPOTENTIALPIXELS_TYPES_H
+#ifndef TYPES_H
+#define TYPES_H
 
 /* Include files */
 #include "rtwtypes.h"

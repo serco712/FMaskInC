@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "prctile.h": "c"
+        "prctile.h": "c",
+        "detectpotentialcloud_types.h": "c",
+        "types.h": "c"
     }
 }

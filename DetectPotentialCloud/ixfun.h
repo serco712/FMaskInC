@@ -13,7 +13,7 @@
 #define IXFUN_H
 
 /* Include files */
-#include "DetectPotentialCloud_types.h"
+#include "types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>

@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "prctile.h"
-#include "DetectPotentialCloud_emxutil.h"
-#include "DetectPotentialCloud_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "rt_nonfinite.h"
 #include "sortIdx.h"
 #include "rt_nonfinite.h"

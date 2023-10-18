@@ -13,7 +13,7 @@
 #define DETECTPOTENTIALCLOUD_H
 
 /* Include files */
-#include "emx/types.h"
+#include "types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>
@@ -25,8 +25,8 @@ extern "C" {
 /* Function Declarations */
 extern void DetectPotentialCloud(
     const ObjMeta *data_meta, const emxArray_boolean_T *mask,
-    const emxArray_uint8_T *water, const struct0_T *data_toabt,
-    const struct1_T *dem, const emxArray_real32_T *ndvi,
+    const emxArray_uint8_T *water, const ObjTOABT *data_toabt,
+    const GRIDobj *dem, const emxArray_real32_T *ndvi,
     const emxArray_real32_T *ndsi, const emxArray_real32_T *ndbi,
     const emxArray_boolean_T *idplcd, const emxArray_real32_T *whiteness,
     const emxArray_real32_T *HOT, const emxArray_real32_T *wpt,

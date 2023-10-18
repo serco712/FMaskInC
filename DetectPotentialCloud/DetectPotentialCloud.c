@@ -11,7 +11,8 @@
 
 /* Include files */
 #include "DetectPotentialCloud.h"
-#include "emx/emxutil.h"
+#include "emxutil.h"
+#include "types.h"
 #include "ixfun.h"
 #include "prctile.h"
 #include "problSpectralVaribility.h"
@@ -19,7 +20,7 @@
 #include <math.h>
 
 /* Function Declarations */
-static void binary_expand_op(emxArray_boolean_T *in1, const struct0_T *in2,
+static void binary_expand_op(emxArray_boolean_T *in1, const ObjTOABT *in2,
                              float in3);
 
 static void binary_expand_op_1(emxArray_boolean_T *in1,
@@ -53,7 +54,7 @@ static void binary_expand_op_8(emxArray_boolean_T *in1,
 static void times(emxArray_real32_T *in1, const emxArray_real32_T *in2);
 
 /* Function Definitions */
-static void binary_expand_op(emxArray_boolean_T *in1, const struct0_T *in2,
+static void binary_expand_op(emxArray_boolean_T *in1, const ObjTOABT *in2,
                              float in3)
 {
   emxArray_boolean_T *b_in1;
@@ -666,8 +667,8 @@ static void times(emxArray_real32_T *in1, const emxArray_real32_T *in2)
 
 void DetectPotentialCloud(
     const ObjMeta *data_meta, const emxArray_boolean_T *mask,
-    const emxArray_uint8_T *water, const struct0_T *data_toabt,
-    const struct1_T *dem, const emxArray_real32_T *ndvi,
+    const emxArray_uint8_T *water, const ObjTOABT *data_toabt,
+    const GRIDobj *dem, const emxArray_real32_T *ndvi,
     const emxArray_real32_T *ndsi, const emxArray_real32_T *ndbi,
     const emxArray_boolean_T *idplcd, const emxArray_real32_T *whiteness,
     const emxArray_real32_T *HOT, const emxArray_real32_T *wpt,

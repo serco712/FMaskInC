@@ -13,7 +13,7 @@
 #define PROBLSPECTRALVARIBILITY_H
 
 /* Include files */
-#include "DetectPotentialCloud_types.h"
+#include "types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>
@@ -23,10 +23,10 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-void binary_expand_op_4(emxArray_boolean_T *in1, const struct0_T *in2,
+void binary_expand_op_4(emxArray_boolean_T *in1, const ObjTOABT *in2,
                         const emxArray_real32_T *in3);
 
-void binary_expand_op_5(emxArray_boolean_T *in1, const struct0_T *in2,
+void binary_expand_op_5(emxArray_boolean_T *in1, const ObjTOABT *in2,
                         const emxArray_real32_T *in3);
 
 #ifdef __cplusplus

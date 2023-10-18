@@ -11,12 +11,12 @@
 
 /* Include files */
 #include "problSpectralVaribility.h"
-#include "DetectPotentialCloud_emxutil.h"
-#include "DetectPotentialCloud_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */
-void binary_expand_op_4(emxArray_boolean_T *in1, const struct0_T *in2,
+void binary_expand_op_4(emxArray_boolean_T *in1, const ObjTOABT *in2,
                         const emxArray_real32_T *in3)
 {
   const float *in3_data;
@@ -67,7 +67,7 @@ void binary_expand_op_4(emxArray_boolean_T *in1, const struct0_T *in2,
   }
 }
 
-void binary_expand_op_5(emxArray_boolean_T *in1, const struct0_T *in2,
+void binary_expand_op_5(emxArray_boolean_T *in1, const ObjTOABT *in2,
                         const emxArray_real32_T *in3)
 {
   const float *in3_data;

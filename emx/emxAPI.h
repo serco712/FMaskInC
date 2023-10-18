@@ -3,17 +3,18 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * DetectPotentialPixels_emxAPI.h
+ * emxAPI.h
  *
- * Code generation for function 'DetectPotentialPixels_emxAPI'
+ * Code generation
  *
  */
 
-#ifndef DETECTPOTENTIALPIXELS_EMXAPI_H
-#define DETECTPOTENTIALPIXELS_EMXAPI_H
+#ifndef EMXAPI_H
+#define EMXAPI_H
 
 /* Include files */
 #include "types.h"
+#include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>
 
@@ -25,8 +26,13 @@ extern "C" {
 extern emxArray_boolean_T *emxCreateND_boolean_T(int numDimensions,
                                                  const int *size);
 
+extern emxArray_char_T *emxCreateND_char_T(int numDimensions, const int *size);
+
 extern emxArray_real32_T *emxCreateND_real32_T(int numDimensions,
                                                const int *size);
+
+extern emxArray_uint8_T *emxCreateND_uint8_T(int numDimensions,
+                                             const int *size);
 
 extern emxArray_real_T *emxCreateND_real_T(int numDimensions, const int *size);
 
@@ -34,8 +40,15 @@ extern emxArray_boolean_T *emxCreateWrapperND_boolean_T(boolean_T *data,
                                                         int numDimensions,
                                                         const int *size);
 
+extern emxArray_char_T *emxCreateWrapperND_char_T(char *data, int numDimensions,
+                                                  const int *size);
+
 extern emxArray_real32_T *
 emxCreateWrapperND_real32_T(float *data, int numDimensions, const int *size);
+
+extern emxArray_uint8_T *emxCreateWrapperND_uint8_T(unsigned char *data,
+                                                    int numDimensions,
+                                                    const int *size);
 
 extern emxArray_real_T *
 emxCreateWrapperND_real_T(double *data, int numDimensions, const int *size);
@@ -43,23 +56,40 @@ emxCreateWrapperND_real_T(double *data, int numDimensions, const int *size);
 extern emxArray_boolean_T *emxCreateWrapper_boolean_T(boolean_T *data, int rows,
                                                       int cols);
 
+extern emxArray_char_T *emxCreateWrapper_char_T(char *data, int rows, int cols);
+
 extern emxArray_real32_T *emxCreateWrapper_real32_T(float *data, int rows,
                                                     int cols);
+
+extern emxArray_uint8_T *emxCreateWrapper_uint8_T(unsigned char *data, int rows,
+                                                  int cols);
 
 extern emxArray_real_T *emxCreateWrapper_real_T(double *data, int rows,
                                                 int cols);
 
 extern emxArray_boolean_T *emxCreate_boolean_T(int rows, int cols);
 
+extern emxArray_char_T *emxCreate_char_T(int rows, int cols);
+
 extern emxArray_real32_T *emxCreate_real32_T(int rows, int cols);
+
+extern emxArray_uint8_T *emxCreate_uint8_T(int rows, int cols);
 
 extern emxArray_real_T *emxCreate_real_T(int rows, int cols);
 
 extern void emxDestroyArray_boolean_T(emxArray_boolean_T *emxArray);
 
+extern void emxDestroyArray_char_T(emxArray_char_T *emxArray);
+
 extern void emxDestroyArray_real32_T(emxArray_real32_T *emxArray);
 
+extern void emxDestroyArray_uint8_T(emxArray_uint8_T *emxArray);
+
 extern void emxDestroyArray_real_T(emxArray_real_T *emxArray);
+
+extern void emxDestroy_GRIDobj(GRIDobj emxArray);
+
+extern void emxDestroy_ObjMeta(ObjMeta emxArray);
 
 extern void emxDestroy_ObjTOABT(ObjTOABT emxArray);
 
@@ -69,7 +99,14 @@ extern void emxInitArray_boolean_T(emxArray_boolean_T **pEmxArray,
 extern void emxInitArray_real32_T(emxArray_real32_T **pEmxArray,
                                   int numDimensions);
 
+extern void emxInitArray_uint8_T(emxArray_uint8_T **pEmxArray,
+                                 int numDimensions);
+
 extern void emxInitArray_real_T(emxArray_real_T **pEmxArray, int numDimensions);
+
+extern void emxInit_GRIDobj(GRIDobj *pStruct);
+
+extern void emxInit_ObjMeta(ObjMeta *pStruct);
 
 extern void emxInit_ObjTOABT(ObjTOABT *pStruct);
 
@@ -78,4 +115,4 @@ extern void emxInit_ObjTOABT(ObjTOABT *pStruct);
 #endif
 
 #endif
-/* End of code generation (DetectPotentialPixels_emxAPI.h) */
+/* End of code generation */

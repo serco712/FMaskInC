@@ -49,7 +49,11 @@ static emxArray_char_T *argInit_1xUnbounded_char_T(void);
 
 static void argInit_2x2_real_T(double result[4]);
 
+static GRIDobj argInit_GRIDobj(void);
+
 static void argInit_ObjMeta(ObjMeta *result);
+
+static void argInit_ObjTOABT(ObjTOABT *result);
 
 static boolean_T argInit_boolean_T(void);
 
@@ -58,10 +62,6 @@ static char argInit_char_T(void);
 static float argInit_real32_T(void);
 
 static double argInit_real_T(void);
-
-static void argInit_struct0_T(struct0_T *result);
-
-static struct1_T argInit_struct1_T(void);
 
 static unsigned char argInit_uint8_T(void);
 
@@ -115,6 +115,15 @@ Change this value to the value that the application requires. */
   }
 }
 
+static GRIDobj argInit_GRIDobj(void)
+{
+  GRIDobj result;
+  /* Set the value of each structure field.
+Change this value to the value that the application requires. */
+  result.Z = c_argInit_UnboundedxUnbounded_r();
+  return result;
+}
+
 static void argInit_ObjMeta(ObjMeta *result)
 {
   double result_tmp;
@@ -134,27 +143,7 @@ Change this value to the value that the application requires. */
   result->UL[1] = result->Dim[1];
 }
 
-static boolean_T argInit_boolean_T(void)
-{
-  return false;
-}
-
-static char argInit_char_T(void)
-{
-  return '?';
-}
-
-static float argInit_real32_T(void)
-{
-  return 0.0F;
-}
-
-static double argInit_real_T(void)
-{
-  return 0.0;
-}
-
-static void argInit_struct0_T(struct0_T *result)
+static void argInit_ObjTOABT(ObjTOABT *result)
 {
   /* Set the value of each structure field.
 Change this value to the value that the application requires. */
@@ -177,13 +166,24 @@ Change this value to the value that the application requires. */
   result->SatuRed = c_argInit_UnboundedxUnbounded_b();
 }
 
-static struct1_T argInit_struct1_T(void)
+static boolean_T argInit_boolean_T(void)
 {
-  struct1_T result;
-  /* Set the value of each structure field.
-Change this value to the value that the application requires. */
-  result.Z = c_argInit_UnboundedxUnbounded_r();
-  return result;
+  return false;
+}
+
+static char argInit_char_T(void)
+{
+  return '?';
+}
+
+static float argInit_real32_T(void)
+{
+  return 0.0F;
+}
+
+static double argInit_real_T(void)
+{
+  return 0.0;
 }
 
 static unsigned char argInit_uint8_T(void)
@@ -271,7 +271,9 @@ You do not need to do this more than one time. */
 
 void main_DetectPotentialCloud(void)
 {
+  GRIDobj dem;
   ObjMeta data_meta;
+  ObjTOABT data_toabt;
   emxArray_boolean_T *idplcd;
   emxArray_boolean_T *idused;
   emxArray_boolean_T *mask;
@@ -284,8 +286,6 @@ void main_DetectPotentialCloud(void)
   emxArray_real32_T *wpt;
   emxArray_uint8_T *cloud;
   emxArray_uint8_T *water;
-  struct0_T data_toabt;
-  struct1_T dem;
   double sum_clr;
   float t_temph;
   float t_templ;
@@ -297,9 +297,9 @@ void main_DetectPotentialCloud(void)
   /* Initialize function input argument 'water'. */
   water = c_argInit_UnboundedxUnbounded_u();
   /* Initialize function input argument 'data_toabt'. */
-  argInit_struct0_T(&data_toabt);
+  argInit_ObjTOABT(&data_toabt);
   /* Initialize function input argument 'dem'. */
-  dem = argInit_struct1_T();
+  dem = argInit_GRIDobj();
   /* Initialize function input argument 'ndvi'. */
   ndvi = c_argInit_UnboundedxUnbounded_r();
   /* Initialize function input argument 'ndsi'. */
@@ -330,8 +330,8 @@ void main_DetectPotentialCloud(void)
   emxDestroyArray_real32_T(ndbi);
   emxDestroyArray_real32_T(ndsi);
   emxDestroyArray_real32_T(ndvi);
-  emxDestroy_struct1_T(dem);
-  emxDestroy_struct0_T(data_toabt);
+  emxDestroy_GRIDobj(dem);
+  emxDestroy_ObjTOABT(data_toabt);
   emxDestroyArray_uint8_T(water);
   emxDestroyArray_boolean_T(mask);
   emxDestroy_ObjMeta(data_meta);

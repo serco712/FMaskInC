@@ -3,16 +3,16 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * DetectWater_emxAPI.c
+ * emxAPI.c
  *
- * Code generation for function 'DetectWater_emxAPI'
+ * Code generation
  *
  */
 
 /* Include files */
-#include "DetectWater_emxAPI.h"
-#include "DetectWater_emxutil.h"
-#include "DetectWater_types.h"
+#include "emxAPI.h"
+#include "emxutil.h"
+#include "types.h"
 #include "rt_nonfinite.h"
 #include <stdlib.h>
 
@@ -29,6 +29,23 @@ emxArray_boolean_T *emxCreateND_boolean_T(int numDimensions, const int *size)
     emx->size[i] = size[i];
   }
   emx->data = (boolean_T *)malloc((unsigned int)numEl * sizeof(boolean_T));
+  emx->numDimensions = numDimensions;
+  emx->allocatedSize = numEl;
+  return emx;
+}
+
+emxArray_char_T *emxCreateND_char_T(int numDimensions, const int *size)
+{
+  emxArray_char_T *emx;
+  int i;
+  int numEl;
+  emxInit_char_T(&emx, numDimensions);
+  numEl = 1;
+  for (i = 0; i < numDimensions; i++) {
+    numEl *= size[i];
+    emx->size[i] = size[i];
+  }
+  emx->data = (char *)malloc((unsigned int)numEl * sizeof(char));
   emx->numDimensions = numDimensions;
   emx->allocatedSize = numEl;
   return emx;
@@ -69,6 +86,23 @@ emxArray_uint8_T *emxCreateND_uint8_T(int numDimensions, const int *size)
   return emx;
 }
 
+emxArray_real_T *emxCreateND_real_T(int numDimensions, const int *size)
+{
+  emxArray_real_T *emx;
+  int i;
+  int numEl;
+  emxInit_real_T(&emx, numDimensions);
+  numEl = 1;
+  for (i = 0; i < numDimensions; i++) {
+    numEl *= size[i];
+    emx->size[i] = size[i];
+  }
+  emx->data = (double *)malloc((unsigned int)numEl * sizeof(double));
+  emx->numDimensions = numDimensions;
+  emx->allocatedSize = numEl;
+  return emx;
+}
+
 emxArray_boolean_T *emxCreateWrapperND_boolean_T(boolean_T *data,
                                                  int numDimensions,
                                                  const int *size)
@@ -77,6 +111,25 @@ emxArray_boolean_T *emxCreateWrapperND_boolean_T(boolean_T *data,
   int i;
   int numEl;
   emxInit_boolean_T(&emx, numDimensions);
+  numEl = 1;
+  for (i = 0; i < numDimensions; i++) {
+    numEl *= size[i];
+    emx->size[i] = size[i];
+  }
+  emx->data = data;
+  emx->numDimensions = numDimensions;
+  emx->allocatedSize = numEl;
+  emx->canFreeData = false;
+  return emx;
+}
+
+emxArray_char_T *emxCreateWrapperND_char_T(char *data, int numDimensions,
+                                           const int *size)
+{
+  emxArray_char_T *emx;
+  int i;
+  int numEl;
+  emxInit_char_T(&emx, numDimensions);
   numEl = 1;
   for (i = 0; i < numDimensions; i++) {
     numEl *= size[i];
@@ -127,11 +180,43 @@ emxArray_uint8_T *emxCreateWrapperND_uint8_T(unsigned char *data,
   return emx;
 }
 
+emxArray_real_T *emxCreateWrapperND_real_T(double *data, int numDimensions,
+                                           const int *size)
+{
+  emxArray_real_T *emx;
+  int i;
+  int numEl;
+  emxInit_real_T(&emx, numDimensions);
+  numEl = 1;
+  for (i = 0; i < numDimensions; i++) {
+    numEl *= size[i];
+    emx->size[i] = size[i];
+  }
+  emx->data = data;
+  emx->numDimensions = numDimensions;
+  emx->allocatedSize = numEl;
+  emx->canFreeData = false;
+  return emx;
+}
+
 emxArray_boolean_T *emxCreateWrapper_boolean_T(boolean_T *data, int rows,
                                                int cols)
 {
   emxArray_boolean_T *emx;
   emxInit_boolean_T(&emx, 2);
+  emx->size[0] = rows;
+  emx->size[1] = cols;
+  emx->data = data;
+  emx->numDimensions = 2;
+  emx->allocatedSize = rows * cols;
+  emx->canFreeData = false;
+  return emx;
+}
+
+emxArray_char_T *emxCreateWrapper_char_T(char *data, int rows, int cols)
+{
+  emxArray_char_T *emx;
+  emxInit_char_T(&emx, 2);
   emx->size[0] = rows;
   emx->size[1] = cols;
   emx->data = data;
@@ -168,6 +253,19 @@ emxArray_uint8_T *emxCreateWrapper_uint8_T(unsigned char *data, int rows,
   return emx;
 }
 
+emxArray_real_T *emxCreateWrapper_real_T(double *data, int rows, int cols)
+{
+  emxArray_real_T *emx;
+  emxInit_real_T(&emx, 2);
+  emx->size[0] = rows;
+  emx->size[1] = cols;
+  emx->data = data;
+  emx->numDimensions = 2;
+  emx->allocatedSize = rows * cols;
+  emx->canFreeData = false;
+  return emx;
+}
+
 emxArray_boolean_T *emxCreate_boolean_T(int rows, int cols)
 {
   emxArray_boolean_T *emx;
@@ -177,6 +275,20 @@ emxArray_boolean_T *emxCreate_boolean_T(int rows, int cols)
   numEl = rows * cols;
   emx->size[1] = cols;
   emx->data = (boolean_T *)malloc((unsigned int)numEl * sizeof(boolean_T));
+  emx->numDimensions = 2;
+  emx->allocatedSize = numEl;
+  return emx;
+}
+
+emxArray_char_T *emxCreate_char_T(int rows, int cols)
+{
+  emxArray_char_T *emx;
+  int numEl;
+  emxInit_char_T(&emx, 2);
+  emx->size[0] = rows;
+  numEl = rows * cols;
+  emx->size[1] = cols;
+  emx->data = (char *)malloc((unsigned int)numEl * sizeof(char));
   emx->numDimensions = 2;
   emx->allocatedSize = numEl;
   return emx;
@@ -211,9 +323,28 @@ emxArray_uint8_T *emxCreate_uint8_T(int rows, int cols)
   return emx;
 }
 
+emxArray_real_T *emxCreate_real_T(int rows, int cols)
+{
+  emxArray_real_T *emx;
+  int numEl;
+  emxInit_real_T(&emx, 2);
+  emx->size[0] = rows;
+  numEl = rows * cols;
+  emx->size[1] = cols;
+  emx->data = (double *)malloc((unsigned int)numEl * sizeof(double));
+  emx->numDimensions = 2;
+  emx->allocatedSize = numEl;
+  return emx;
+}
+
 void emxDestroyArray_boolean_T(emxArray_boolean_T *emxArray)
 {
   emxFree_boolean_T(&emxArray);
+}
+
+void emxDestroyArray_char_T(emxArray_char_T *emxArray)
+{
+  emxFree_char_T(&emxArray);
 }
 
 void emxDestroyArray_real32_T(emxArray_real32_T *emxArray)
@@ -224,6 +355,26 @@ void emxDestroyArray_real32_T(emxArray_real32_T *emxArray)
 void emxDestroyArray_uint8_T(emxArray_uint8_T *emxArray)
 {
   emxFree_uint8_T(&emxArray);
+}
+
+void emxDestroyArray_real_T(emxArray_real_T *emxArray)
+{
+  emxFree_real_T(&emxArray);
+}
+
+void emxDestroy_GRIDobj(GRIDobj emxArray)
+{
+  emxFreeStruct_GRIDobj(&emxArray);
+}
+
+void emxDestroy_ObjMeta(ObjMeta emxArray)
+{
+  emxFreeStruct_ObjMeta(&emxArray);
+}
+
+void emxDestroy_ObjTOABT(ObjTOABT emxArray)
+{
+  emxFreeStruct_ObjTOABT(&emxArray);
 }
 
 void emxInitArray_boolean_T(emxArray_boolean_T **pEmxArray, int numDimensions)
@@ -241,4 +392,24 @@ void emxInitArray_uint8_T(emxArray_uint8_T **pEmxArray, int numDimensions)
   emxInit_uint8_T(pEmxArray, numDimensions);
 }
 
-/* End of code generation (DetectWater_emxAPI.c) */
+void emxInitArray_real_T(emxArray_real_T **pEmxArray, int numDimensions)
+{
+  emxInit_real_T(pEmxArray, numDimensions);
+}
+
+void emxInit_GRIDobj(GRIDobj *pStruct)
+{
+  emxInitStruct_GRIDobj(pStruct);
+}
+
+void emxInit_ObjMeta(ObjMeta *pStruct)
+{
+  emxInitStruct_ObjMeta(pStruct);
+}
+
+void emxInit_ObjTOABT(ObjTOABT *pStruct)
+{
+  emxInitStruct_ObjTOABT(pStruct);
+}
+
+/* End of code generation (DetectPotentialCloud_emxAPI.c) */
