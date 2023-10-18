@@ -13,7 +13,7 @@
 #define SATURATE_H
 
 /* Include files */
-#include "Saturate_types.h"
+#include "types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>

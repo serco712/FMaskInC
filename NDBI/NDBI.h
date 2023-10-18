@@ -13,7 +13,7 @@
 #define NDBI_H
 
 /* Include files */
-#include "NDBI_types.h"
+#include "types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>

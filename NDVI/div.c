@@ -10,9 +10,9 @@
  */
 
 /* Include files */
-#include "div.h"
-#include "NDVI_emxutil.h"
-#include "NDVI_types.h"
+#include "NDVI/div.h"
+#include "emxutil.h"
+#include "types.h"
 
 /* Function Definitions */
 void binary_expand_op(emxArray_real32_T *in1, const emxArray_real32_T *in2,

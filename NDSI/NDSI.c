@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "NDSI.h"
-#include "NDSI_emxutil.h"
-#include "NDSI_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "div.h"
 
 /* Function Declarations */

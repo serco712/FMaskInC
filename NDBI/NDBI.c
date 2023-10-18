@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "NDBI.h"
-#include "NDBI_emxutil.h"
-#include "NDBI_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "div.h"
 
 /* Function Definitions */

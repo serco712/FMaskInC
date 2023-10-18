@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "div.h"
-#include "NDSI_emxutil.h"
-#include "NDSI_types.h"
+#include "emxutil.h"
+#include "types.h"
 
 /* Function Definitions */
 void binary_expand_op(emxArray_real32_T *in1, const emxArray_real32_T *in2,

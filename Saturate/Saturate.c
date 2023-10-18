@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "Saturate.h"
-#include "Saturate_emxutil.h"
-#include "Saturate_types.h"
+#include "emxutil.h"
+#include "types.h"
 
 /* Function Declarations */
 static void binary_expand_op(emxArray_boolean_T *in1,

@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "NormalizaCirrusDEM.h"
-#include "DetectPotentialPixels_emxutil.h"
-#include "DetectPotentialPixels_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "rt_nonfinite.h"
 
 /* Function Definitions */

@@ -11,12 +11,11 @@
 
 /* Include files */
 #include "DetectPotentialPixels.h"
-#include "DetectPotentialPixels_emxutil.h"
-#include "DetectPotentialPixels_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "NormalizaCirrusDEM.h"
 #include "colon.h"
 #include "div.h"
-#include "rt_nonfinite.h"
 #include "rt_nonfinite.h"
 #include <math.h>
 

@@ -11,8 +11,8 @@
 
 /* Include files */
 #include "NDVI.h"
-#include "NDVI_emxutil.h"
-#include "NDVI_types.h"
+#include "emxutil.h"
+#include "types.h"
 #include "div.h"
 
 /* Function Declarations */

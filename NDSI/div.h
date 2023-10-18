@@ -13,7 +13,7 @@
 #define DIV_H
 
 /* Include files */
-#include "NDSI_types.h"
+#include "types.h"
 #include "rtwtypes.h"
 #include <stddef.h>
 #include <stdlib.h>
