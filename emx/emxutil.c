@@ -324,6 +324,22 @@ void emxInitArray_uint8_T(emxArray_uint8_T **pEmxArray, int numDimensions)
   emxInit_uint8_T(pEmxArray, numDimensions);
 }
 
+void emxInit_uint32_T(emxArray_uint32_T **pEmxArray)
+{
+  emxArray_uint32_T *emxArray;
+  int i;
+  *pEmxArray = (emxArray_uint32_T *)malloc(sizeof(emxArray_uint32_T));
+  emxArray = *pEmxArray;
+  emxArray->data = (unsigned int *)NULL;
+  emxArray->numDimensions = 2;
+  emxArray->size = (int *)malloc(sizeof(int) * 2U);
+  emxArray->allocatedSize = 0;
+  emxArray->canFreeData = true;
+  for (i = 0; i < 2; i++) {
+    emxArray->size[i] = 0;
+  }
+}
+
 void emxEnsureCapacity_boolean_T(emxArray_boolean_T *emxArray, int oldNumel)
 {
   int i;
@@ -474,6 +490,44 @@ void emxEnsureCapacity_uint8_T(emxArray_uint8_T *emxArray, int oldNumel)
   }
 }
 
+void emxEnsureCapacity_uint32_T(emxArray_uint32_T *emxArray, int oldNumel)
+{
+  int i;
+  int newNumel;
+  void *newData;
+  if (oldNumel < 0) {
+    oldNumel = 0;
+  }
+  newNumel = 1;
+  for (i = 0; i < emxArray->numDimensions; i++) {
+    newNumel *= emxArray->size[i];
+  }
+  if (newNumel > emxArray->allocatedSize) {
+    i = emxArray->allocatedSize;
+    if (i < 16) {
+      i = 16;
+    }
+    while (i < newNumel) {
+      if (i > 1073741823) {
+        i = MAX_int32_T;
+      } else {
+        i *= 2;
+      }
+    }
+    newData = malloc((unsigned int)i * sizeof(unsigned int));
+    if (emxArray->data != NULL) {
+      memcpy(newData, emxArray->data,
+             sizeof(unsigned int) * (unsigned int)oldNumel);
+      if (emxArray->canFreeData) {
+        free(emxArray->data);
+      }
+    }
+    emxArray->data = (unsigned int *)newData;
+    emxArray->allocatedSize = i;
+    emxArray->canFreeData = true;
+  }
+}
+
 void emxFreeStruct_ObjMeta(ObjMeta *pStruct)
 {
   emxFree_char_T(&pStruct->Name);
@@ -566,6 +620,19 @@ void emxFree_uint8_T(emxArray_uint8_T **pEmxArray)
     free((*pEmxArray)->size);
     free(*pEmxArray);
     *pEmxArray = (emxArray_uint8_T *)NULL;
+  }
+}
+
+void emxFree_uint32_T(emxArray_uint32_T **pEmxArray)
+{
+  if (*pEmxArray != (emxArray_uint32_T *)NULL) {
+    if (((*pEmxArray)->data != (unsigned int *)NULL) &&
+        (*pEmxArray)->canFreeData) {
+      free((*pEmxArray)->data);
+    }
+    free((*pEmxArray)->size);
+    free(*pEmxArray);
+    *pEmxArray = (emxArray_uint32_T *)NULL;
   }
 }
 

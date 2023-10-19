@@ -91,6 +91,9 @@ extern void emxEnsureCapacity_boolean_T(emxArray_boolean_T *emxArray,
 
 extern void emxEnsureCapacity_uint8_T(emxArray_uint8_T *emxArray, int oldNumel);
 
+extern void emxEnsureCapacity_uint32_T(emxArray_uint32_T *emxArray,
+                                       int oldNumel);
+
 extern void emxEnsureCapacity_int32_T(emxArray_int32_T *emxArray, int oldNumel);
 
 extern void emxEnsureCapacity_real32_T(emxArray_real32_T *emxArray,
@@ -114,6 +117,8 @@ extern void emxFree_real32_T(emxArray_real32_T **pEmxArray);
 
 extern void emxFree_real_T(emxArray_real_T **pEmxArray);
 
+extern void emxFree_uint32_T(emxArray_uint32_T **pEmxArray);
+
 extern void emxInitStruct_ObjMeta(ObjMeta *pStruct);
 
 extern void emxInitStruct_ObjTOABT(ObjTOABT *pStruct);
@@ -126,6 +131,8 @@ extern void emxInit_boolean_T(emxArray_boolean_T **pEmxArray,
 extern void emxInit_char_T(emxArray_char_T **pEmxArray, int numDimensions);
 
 extern void emxInit_uint8_T(emxArray_uint8_T **pEmxArray, int numDimensions);
+
+extern void emxInit_uint32_T(emxArray_uint32_T **pEmxArray);
 
 extern void emxInit_int32_T(emxArray_int32_T **pEmxArray);
 
