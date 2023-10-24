@@ -2,6 +2,7 @@
     "files.associations": {
         "prctile.h": "c",
         "detectpotentialcloud_types.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "autofmask_initialize.h": "c"
     }
 }
