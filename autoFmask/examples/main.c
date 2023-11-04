@@ -244,6 +244,9 @@ void main_autoFmask(void)
   /* Call the entry-point 'autoFmask'. */
   cldpix_tmp = autoFmask(&data_meta, &data_toabt, water_occur, cldpix_tmp,
                          cldpix_tmp, cldpix_tmp, cldpix_tmp);
+  
+
+  printf("El porcentaje de nubes es %.2f%%\n");
   emxDestroyArray_real32_T(water_occur);
   emxDestroy_ObjTOABT(data_toabt);
   emxDestroy_ObjMeta(data_meta);
