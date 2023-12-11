@@ -2,25 +2,23 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: imfil.h
- *
- * MATLAB Coder version            : 23.2
- * C/C++ source code generated on  : 25-Nov-2023 21:06:03
  */
 
-#ifndef IMFILL_H
-#define IMFILL_H
+#ifndef CONNECTEDCOMPONENTS_H
+#define CONNECTEDCOMPONENTS_H
 
 /* Include Files */
 #include "rtwtypes.h"
-#include "size.h"
+
+#define MAX_REGION 25
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Function Declarations */
-void imfill(const float A[IMG_SIZE_ITER], float B[IMG_SIZE_ITER]);
+extern void connected_components(const double L[100], const double num_el, const int width,
+        int sizes[MAX_REGION], double orin_x[100], double orin_y[100]);
 
 #ifdef __cplusplus
 }

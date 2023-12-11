@@ -3,9 +3,9 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * bwlabel.h
+ * bwlabel8.h
  *
- * Code generation for function 'bwlabel'
+ * Code generation for function 'bwlabel8'
  *
  */
 
@@ -13,23 +13,18 @@
 #define BWLABEL_H
 
 /* Include files */
-#include "Fmask_types.h"
 #include "rtwtypes.h"
-#include <stddef.h>
-#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Function Declarations */
-double b_bwlabel(const emxArray_boolean_T *varargin_1, emxArray_real_T *L);
-
-void bwlabel(const emxArray_uint8_T *varargin_1, emxArray_real_T *L);
+extern void bwlabel(const unsigned char A[100], double B[100], double *num);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif
-/* End of code generation (bwlabel.h) */
+/* End of code generation (bwlabel8.h) */

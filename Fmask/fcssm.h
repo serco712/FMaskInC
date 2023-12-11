@@ -13,21 +13,21 @@
 #define FCSSM_H
 
 /* Include files */
-#include "Fmask_types.h"
 #include "rtwtypes.h"
-#include <stddef.h>
-#include <stdlib.h>
+#include "space.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
+
 /* Function Declarations */
 double fcssm(double Sun_zen, double Sun_azi, double ptm,
-             const emxArray_uint8_T *Water, emxArray_uint8_T *Snow,
-             const emxArray_uint8_T *plcim, const emxArray_uint8_T *plsim,
+             unsigned char Water[IMG_SIZE], unsigned char Snow[IMG_SIZE],
+             unsigned char plcim[IMG_SIZE], unsigned char plsim[IMG_SIZE],
              const double ijDim[2], const double resolu[4], double cldpix,
-             double sdpix, double snpix);
+             double sdpix, double snpix, struct tData *data);
 
 #ifdef __cplusplus
 }

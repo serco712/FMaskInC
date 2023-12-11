@@ -2,901 +2,439 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
+ * File: bwlabell.c
  *
- * bwlabel.c
- *
- * Code generation for function 'bwlabel'
- *
+ * MATLAB Coder version            : 23.2
+ * C/C++ source code generated on  : 04-Dec-2023 22:23:48
  */
 
-/* Include files */
+/* Include Files */
 #include "bwlabel.h"
-#include "Fmask_emxutil.h"
-#include "Fmask_rtwutil.h"
-#include "Fmask_types.h"
-#include "omp.h"
 #include <math.h>
 
 /* Function Declarations */
-static double b_labelingWu_parallel(const emxArray_boolean_T *im, double M,
-                                    double N, emxArray_real_T *L);
-
-static double labelingWu_parallel(const emxArray_uint8_T *im, double M,
-                                  double N, emxArray_real_T *L);
+static double rt_roundd(double u);
 
 /* Function Definitions */
-static double b_labelingWu_parallel(const emxArray_boolean_T *im, double M,
-                                    double N, emxArray_real_T *L)
+/*
+ * Arguments    : double u
+ * Return Type  : double
+ */
+static double rt_roundd(double u)
 {
-  emxArray_int32_T *chunksSizeAndLabels;
-  emxArray_real_T *P;
-  double b_c;
-  double c_tmp;
+  double y;
+  if (fabs(u) < 4.503599627370496E+15) {
+    if (u >= 0.5) {
+      y = floor(u + 0.5);
+    } else if (u > -0.5) {
+      y = 0.0;
+    } else {
+      y = ceil(u - 0.5);
+    }
+  } else {
+    y = u;
+  }
+  return y;
+}
+
+/*
+ * UNTITLED Summary of this function goes here
+ *    Detailed explanation goes here
+ *
+ * Arguments    : const unsigned char A[100]
+ *                double B[100]
+ *                double *num
+ * Return Type  : void
+ */
+void bwlabel(const unsigned char A[100], double B[100], double *num)
+{
+  double P[51];
   double d;
-  double firstLabel;
-  double k;
   double label;
   double rootj;
-  double stripeWidth;
-  double *L_data;
-  double *P_data;
+  int chunksSizeAndLabels[18];
+  int b_i;
   int c;
-  int c_c;
+  int chunksSizeAndLabels_tmp;
   int exitg1;
   int i;
-  int i1;
-  int nParallelStripes;
-  int qY;
+  int i3;
   int r;
   int thread;
-  int *chunksSizeAndLabels_data;
-  const boolean_T *im_data;
-  im_data = im->data;
-  i = (int)M;
-  qY = L->size[0] * L->size[1];
-  L->size[0] = (int)M;
-  L->size[1] = (int)N;
-  emxEnsureCapacity_real_T(L, qY);
-  L_data = L->data;
-  emxInit_int32_T(&chunksSizeAndLabels, 1);
-  qY = chunksSizeAndLabels->size[0];
-  chunksSizeAndLabels->size[0] = (int)(N + 8.0);
-  emxEnsureCapacity_int32_T(chunksSizeAndLabels, qY);
-  chunksSizeAndLabels_data = chunksSizeAndLabels->data;
-  nParallelStripes = (int)fmax(1.0, fmin(floor(N / 4.0), 8.0));
-  stripeWidth = ceil(N / (double)nParallelStripes);
-  emxInit_real_T(&P, 1);
-  qY = P->size[0];
-  P->size[0] = (int)(ceil(M * N / 2.0) + 1.0);
-  emxEnsureCapacity_real_T(P, qY);
-  P_data = P->data;
-  P_data[0] = 0.0;
-  nParallelStripes--;
-#pragma omp parallel for num_threads(omp_get_max_threads()) private(           \
-    rootj, b_c, firstLabel, label, c_tmp, d, i1, c_c, r, exitg1)
-
-  for (thread = 0; thread <= nParallelStripes; thread++) {
-    c_tmp = (double)thread * stripeWidth + 1.0;
-    d = ((double)thread + 1.0) * stripeWidth;
-    rootj = rt_roundd(fmin(d + 1.0, N + 1.0));
-    if (rootj < 2.147483648E+9) {
-      if (rootj >= -2.147483648E+9) {
-        i1 = (int)rootj;
-      } else {
-        i1 = MIN_int32_T;
-      }
-    } else {
-      i1 = MAX_int32_T;
-    }
-    chunksSizeAndLabels_data[(int)c_tmp - 1] = i1;
-    label = floor(c_tmp / 2.0) * floor((M + 1.0) / 2.0) + 1.0;
-    firstLabel = label;
-    i1 = (int)(fmin(d, N) + (1.0 - c_tmp));
-    for (c_c = 0; c_c < i1; c_c++) {
-      b_c = c_tmp + (double)c_c;
-      for (r = 0; r < i; r++) {
-        if (im_data[r + im->size[0] * ((int)b_c - 1)]) {
-          if ((b_c > c_tmp) && im_data[r + im->size[0] * ((int)b_c - 2)]) {
-            L_data[r + L->size[0] * ((int)b_c - 1)] =
-                L_data[r + L->size[0] * ((int)b_c - 2)];
-          } else if (((double)r + 1.0 < M) && (b_c > c_tmp) &&
-                     im_data[(r + im->size[0] * ((int)b_c - 2)) + 1]) {
-            if ((b_c > c_tmp) && ((unsigned int)r + 1U > 1U) &&
-                im_data[(r + im->size[0] * ((int)b_c - 2)) - 1]) {
-              L_data[r + L->size[0] * ((int)b_c - 1)] =
-                  L_data[(r + L->size[0] * ((int)b_c - 2)) - 1];
-              do {
-                exitg1 = 0;
-                d = L_data[r + L->size[0] * ((int)b_c - 1)];
-                if (P_data[(int)(d + 1.0) - 1] < d) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] =
-                      P_data[(int)(d + 1.0) - 1];
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              rootj = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-              if (L_data[(r + L->size[0] * ((int)b_c - 2)) - 1] != rootj) {
-                while (P_data[(int)(rootj + 1.0) - 1] < rootj) {
-                  rootj = P_data[(int)(rootj + 1.0) - 1];
-                }
-                if (d > rootj) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] = rootj;
-                }
-                do {
-                  exitg1 = 0;
-                  d = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-                  rootj = P_data[(int)(d + 1.0) - 1];
-                  if (rootj < d) {
-                    P_data[(int)(d + 1.0) - 1] =
-                        L_data[r + L->size[0] * ((int)b_c - 1)];
-                    L_data[(r + L->size[0] * ((int)b_c - 2)) + 1] = rootj;
-                  } else {
-                    exitg1 = 1;
-                  }
-                } while (exitg1 == 0);
-                P_data[(int)(d + 1.0) - 1] =
-                    L_data[r + L->size[0] * ((int)b_c - 1)];
-              }
-              do {
-                exitg1 = 0;
-                d = L_data[(r + L->size[0] * ((int)b_c - 2)) - 1];
-                rootj = P_data[(int)(d + 1.0) - 1];
-                if (rootj < d) {
-                  P_data[(int)(d + 1.0) - 1] =
-                      L_data[r + L->size[0] * ((int)b_c - 1)];
-                  L_data[(r + L->size[0] * ((int)b_c - 2)) - 1] = rootj;
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              P_data[(int)(d + 1.0) - 1] =
-                  L_data[r + L->size[0] * ((int)b_c - 1)];
-            } else if (((unsigned int)r + 1U > 1U) &&
-                       im_data[(r + im->size[0] * ((int)b_c - 1)) - 1]) {
-              L_data[r + L->size[0] * ((int)b_c - 1)] =
-                  L_data[(r + L->size[0] * ((int)b_c - 1)) - 1];
-              do {
-                exitg1 = 0;
-                d = L_data[r + L->size[0] * ((int)b_c - 1)];
-                if (P_data[(int)(d + 1.0) - 1] < d) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] =
-                      P_data[(int)(d + 1.0) - 1];
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              rootj = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-              if (L_data[(r + L->size[0] * ((int)b_c - 1)) - 1] != rootj) {
-                while (P_data[(int)(rootj + 1.0) - 1] < rootj) {
-                  rootj = P_data[(int)(rootj + 1.0) - 1];
-                }
-                if (d > rootj) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] = rootj;
-                }
-                do {
-                  exitg1 = 0;
-                  d = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-                  rootj = P_data[(int)(d + 1.0) - 1];
-                  if (rootj < d) {
-                    P_data[(int)(d + 1.0) - 1] =
-                        L_data[r + L->size[0] * ((int)b_c - 1)];
-                    L_data[(r + L->size[0] * ((int)b_c - 2)) + 1] = rootj;
-                  } else {
-                    exitg1 = 1;
-                  }
-                } while (exitg1 == 0);
-                P_data[(int)(d + 1.0) - 1] =
-                    L_data[r + L->size[0] * ((int)b_c - 1)];
-              }
-              do {
-                exitg1 = 0;
-                d = L_data[(r + L->size[0] * ((int)b_c - 1)) - 1];
-                rootj = P_data[(int)(d + 1.0) - 1];
-                if (rootj < d) {
-                  P_data[(int)(d + 1.0) - 1] =
-                      L_data[r + L->size[0] * ((int)b_c - 1)];
-                  L_data[(r + L->size[0] * ((int)b_c - 1)) - 1] = rootj;
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              P_data[(int)(d + 1.0) - 1] =
-                  L_data[r + L->size[0] * ((int)b_c - 1)];
-            } else {
-              L_data[r + L->size[0] * ((int)b_c - 1)] =
-                  L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-            }
-          } else if ((b_c > c_tmp) && ((unsigned int)r + 1U > 1U) &&
-                     im_data[(r + im->size[0] * ((int)b_c - 2)) - 1]) {
-            L_data[r + L->size[0] * ((int)b_c - 1)] =
-                L_data[(r + L->size[0] * ((int)b_c - 2)) - 1];
-          } else if (((unsigned int)r + 1U > 1U) &&
-                     im_data[(r + im->size[0] * ((int)b_c - 1)) - 1]) {
-            L_data[r + L->size[0] * ((int)b_c - 1)] =
-                L_data[(r + L->size[0] * ((int)b_c - 1)) - 1];
+  P[0] = 0.0;
+  for (thread = 0; thread < 2; thread++) {
+    int firstLabel;
+    int startC;
+    c = thread * 5 + 1;
+    chunksSizeAndLabels_tmp = (thread + 1) * 5;
+    chunksSizeAndLabels[c - 1] = chunksSizeAndLabels_tmp + 1;
+    label = floor((double)c / 2.0) * 5.0 + 1.0;
+    firstLabel = (int)label;
+    startC = c;
+    i = thread * 5;
+    b_i = chunksSizeAndLabels_tmp - i;
+    for (chunksSizeAndLabels_tmp = 0; chunksSizeAndLabels_tmp < b_i;
+         chunksSizeAndLabels_tmp++) {
+      c = i + chunksSizeAndLabels_tmp;
+      for (r = 0; r < 10; r++) {
+        int i2;
+        i2 = c + 10 * r;
+        if (A[i2] != 0) {
+          if ((c + 1 > startC) && (A[i2 - 1] != 0)) {
+            B[i2] = B[i2 - 1];
           } else {
-            L_data[r + L->size[0] * ((int)b_c - 1)] = label;
-            P_data[(int)(label + 1.0) - 1] = label;
-            label++;
+            int i4;
+            bool guard1;
+            bool guard2;
+            bool guard3;
+            bool guard4;
+            guard1 = false;
+            guard2 = false;
+            guard3 = false;
+            guard4 = false;
+            if ((r + 1 < 10) && (c + 1 > startC)) {
+              i3 = (c + 10 * (r + 1)) - 1;
+              if (A[i3] != 0) {
+                if ((c + 1 > startC) && (r + 1 > 1)) {
+                  i4 = (c + 10 * (r - 1)) - 1;
+                  if (A[i4] != 0) {
+                    B[i2] = B[i4];
+                    do {
+                      exitg1 = 0;
+                      d = B[i2];
+                      rootj = P[(int)(d + 1.0) - 1];
+                      if (rootj < d) {
+                        B[i2] = rootj;
+                      } else {
+                        exitg1 = 1;
+                      }
+                    } while (exitg1 == 0);
+                    if (B[i4] != B[i3]) {
+                      rootj = B[i3];
+                      while (P[(int)(rootj + 1.0) - 1] < rootj) {
+                        rootj = P[(int)(rootj + 1.0) - 1];
+                      }
+                      if (d > rootj) {
+                        B[i2] = rootj;
+                      }
+                      do {
+                        exitg1 = 0;
+                        d = B[i3];
+                        rootj = P[(int)(d + 1.0) - 1];
+                        if (rootj < d) {
+                          P[(int)(d + 1.0) - 1] = B[i2];
+                          B[i3] = rootj;
+                        } else {
+                          exitg1 = 1;
+                        }
+                      } while (exitg1 == 0);
+                      P[(int)(d + 1.0) - 1] = B[i2];
+                    }
+                    do {
+                      exitg1 = 0;
+                      d = B[i4];
+                      rootj = P[(int)(d + 1.0) - 1];
+                      if (rootj < d) {
+                        P[(int)(d + 1.0) - 1] = B[i2];
+                        B[i4] = rootj;
+                      } else {
+                        exitg1 = 1;
+                      }
+                    } while (exitg1 == 0);
+                    P[(int)(d + 1.0) - 1] = B[i2];
+                  } else {
+                    guard3 = true;
+                  }
+                } else {
+                  guard3 = true;
+                }
+              } else {
+                guard4 = true;
+              }
+            } else {
+              guard4 = true;
+            }
+            if (guard4) {
+              if ((c + 1 > startC) && (r + 1 > 1)) {
+                i3 = (c + 10 * (r - 1)) - 1;
+                if (A[i3] != 0) {
+                  B[i2] = B[i3];
+                } else {
+                  guard2 = true;
+                }
+              } else {
+                guard2 = true;
+              }
+            }
+            if (guard3) {
+              if (r + 1 > 1) {
+                i4 = c + 10 * (r - 1);
+                if (A[i4] != 0) {
+                  B[i2] = B[i4];
+                  do {
+                    exitg1 = 0;
+                    d = B[i2];
+                    rootj = P[(int)(d + 1.0) - 1];
+                    if (rootj < d) {
+                      B[i2] = rootj;
+                    } else {
+                      exitg1 = 1;
+                    }
+                  } while (exitg1 == 0);
+                  if (B[i4] != B[i3]) {
+                    rootj = B[i3];
+                    while (P[(int)(rootj + 1.0) - 1] < rootj) {
+                      rootj = P[(int)(rootj + 1.0) - 1];
+                    }
+                    if (d > rootj) {
+                      B[i2] = rootj;
+                    }
+                    do {
+                      exitg1 = 0;
+                      d = B[i3];
+                      rootj = P[(int)(d + 1.0) - 1];
+                      if (rootj < d) {
+                        P[(int)(d + 1.0) - 1] = B[i2];
+                        B[i3] = rootj;
+                      } else {
+                        exitg1 = 1;
+                      }
+                    } while (exitg1 == 0);
+                    P[(int)(d + 1.0) - 1] = B[i2];
+                  }
+                  do {
+                    exitg1 = 0;
+                    d = B[i4];
+                    rootj = P[(int)(d + 1.0) - 1];
+                    if (rootj < d) {
+                      P[(int)(d + 1.0) - 1] = B[i2];
+                      B[i4] = rootj;
+                    } else {
+                      exitg1 = 1;
+                    }
+                  } while (exitg1 == 0);
+                  P[(int)(d + 1.0) - 1] = B[i2];
+                } else {
+                  B[i2] = B[i3];
+                }
+              } else {
+                B[i2] = B[i3];
+              }
+            }
+            if (guard2) {
+              if (r + 1 > 1) {
+                i3 = c + 10 * (r - 1);
+                if (A[i3] != 0) {
+                  B[i2] = B[i3];
+                } else {
+                  guard1 = true;
+                }
+              } else {
+                guard1 = true;
+              }
+            }
+            if (guard1) {
+              B[i2] = label;
+              P[(int)(label + 1.0) - 1] = label;
+              label++;
+            }
           }
         } else {
-          L_data[r + L->size[0] * ((int)b_c - 1)] = 0.0;
+          B[i2] = 0.0;
         }
       }
     }
-    d = label - firstLabel;
+    d = label - (double)firstLabel;
     if (d < 2.147483648E+9) {
-      if (d >= -2.147483648E+9) {
-        i1 = (int)d;
-      } else {
-        i1 = MIN_int32_T;
-      }
+      i = (int)d;
     } else {
-      i1 = MAX_int32_T;
+      i = MAX_int32_T;
     }
-    chunksSizeAndLabels_data[(int)(c_tmp + 1.0) - 1] = i1;
+    chunksSizeAndLabels[startC] = i;
   }
-  for (c = chunksSizeAndLabels_data[0] - 1; c + 1 <= N;
-       c = chunksSizeAndLabels_data[c] - 1) {
-    for (nParallelStripes = 0; nParallelStripes < i; nParallelStripes++) {
-      if (L_data[nParallelStripes + L->size[0] * c] != 0.0) {
-        double b_i;
-        double j;
+  for (c = chunksSizeAndLabels[0] - 1; c + 1 <= 10;
+       c = chunksSizeAndLabels[c] - 1) {
+    for (r = 0; r < 10; r++) {
+      i = c + 10 * r;
+      d = B[i];
+      if (d != 0.0) {
         double root;
-        if ((unsigned int)nParallelStripes + 1U > 1U) {
-          b_i = L_data[(nParallelStripes + L->size[0] * (c - 1)) - 1];
-          if (b_i != 0.0) {
-            j = L_data[nParallelStripes + L->size[0] * c];
-            root = b_i;
-            while (P_data[(int)(root + 1.0) - 1] < root) {
-              root = P_data[(int)(root + 1.0) - 1];
+        if (r + 1 > 1) {
+          label = B[(c + 10 * (r - 1)) - 1];
+          if (label != 0.0) {
+            root = label;
+            while (P[(int)(root + 1.0) - 1] < root) {
+              root = P[(int)(root + 1.0) - 1];
             }
-            if (b_i != j) {
-              stripeWidth = j;
-              while (P_data[(int)(stripeWidth + 1.0) - 1] < stripeWidth) {
-                stripeWidth = P_data[(int)(stripeWidth + 1.0) - 1];
+            if (label != d) {
+              rootj = B[i];
+              while (P[(int)(rootj + 1.0) - 1] < rootj) {
+                rootj = P[(int)(rootj + 1.0) - 1];
               }
-              if (root > stripeWidth) {
-                root = stripeWidth;
+              if (root > rootj) {
+                root = rootj;
               }
+              rootj = B[i];
               do {
                 exitg1 = 0;
-                stripeWidth = P_data[(int)(j + 1.0) - 1];
-                if (stripeWidth < j) {
-                  P_data[(int)(j + 1.0) - 1] = root;
-                  j = stripeWidth;
+                d = P[(int)(rootj + 1.0) - 1];
+                if (d < rootj) {
+                  P[(int)(rootj + 1.0) - 1] = root;
+                  rootj = d;
                 } else {
                   exitg1 = 1;
                 }
               } while (exitg1 == 0);
-              P_data[(int)(j + 1.0) - 1] = root;
+              P[(int)(rootj + 1.0) - 1] = root;
             }
             do {
               exitg1 = 0;
-              stripeWidth = P_data[(int)(b_i + 1.0) - 1];
-              if (stripeWidth < b_i) {
-                P_data[(int)(b_i + 1.0) - 1] = root;
-                b_i = stripeWidth;
+              d = P[(int)(label + 1.0) - 1];
+              if (d < label) {
+                P[(int)(label + 1.0) - 1] = root;
+                label = d;
               } else {
                 exitg1 = 1;
               }
             } while (exitg1 == 0);
-            P_data[(int)(b_i + 1.0) - 1] = root;
-            L_data[nParallelStripes + L->size[0] * c] = root;
+            P[(int)(label + 1.0) - 1] = root;
+            B[i] = root;
           }
         }
-        if ((double)nParallelStripes + 1.0 < M) {
-          b_i = L_data[(nParallelStripes + L->size[0] * (c - 1)) + 1];
-          if (b_i != 0.0) {
-            j = L_data[nParallelStripes + L->size[0] * c];
-            root = b_i;
-            while (P_data[(int)(root + 1.0) - 1] < root) {
-              root = P_data[(int)(root + 1.0) - 1];
+        if (r + 1 < 10) {
+          label = B[(c + 10 * (r + 1)) - 1];
+          if (label != 0.0) {
+            root = label;
+            while (P[(int)(root + 1.0) - 1] < root) {
+              root = P[(int)(root + 1.0) - 1];
             }
-            if (b_i != j) {
-              stripeWidth = j;
-              while (P_data[(int)(stripeWidth + 1.0) - 1] < stripeWidth) {
-                stripeWidth = P_data[(int)(stripeWidth + 1.0) - 1];
+            if (label != B[i]) {
+              rootj = B[i];
+              while (P[(int)(rootj + 1.0) - 1] < rootj) {
+                rootj = P[(int)(rootj + 1.0) - 1];
               }
-              if (root > stripeWidth) {
-                root = stripeWidth;
+              if (root > rootj) {
+                root = rootj;
               }
+              rootj = B[i];
               do {
                 exitg1 = 0;
-                stripeWidth = P_data[(int)(j + 1.0) - 1];
-                if (stripeWidth < j) {
-                  P_data[(int)(j + 1.0) - 1] = root;
-                  j = stripeWidth;
+                d = P[(int)(rootj + 1.0) - 1];
+                if (d < rootj) {
+                  P[(int)(rootj + 1.0) - 1] = root;
+                  rootj = d;
                 } else {
                   exitg1 = 1;
                 }
               } while (exitg1 == 0);
-              P_data[(int)(j + 1.0) - 1] = root;
+              P[(int)(rootj + 1.0) - 1] = root;
             }
             do {
               exitg1 = 0;
-              stripeWidth = P_data[(int)(b_i + 1.0) - 1];
-              if (stripeWidth < b_i) {
-                P_data[(int)(b_i + 1.0) - 1] = root;
-                b_i = stripeWidth;
+              d = P[(int)(label + 1.0) - 1];
+              if (d < label) {
+                P[(int)(label + 1.0) - 1] = root;
+                label = d;
               } else {
                 exitg1 = 1;
               }
             } while (exitg1 == 0);
-            P_data[(int)(b_i + 1.0) - 1] = root;
-            L_data[nParallelStripes + L->size[0] * c] = root;
+            P[(int)(label + 1.0) - 1] = root;
+            B[i] = root;
           }
         }
-        b_i = L_data[nParallelStripes + L->size[0] * (c - 1)];
-        if (b_i != 0.0) {
-          j = L_data[nParallelStripes + L->size[0] * c];
-          root = b_i;
-          while (P_data[(int)(root + 1.0) - 1] < root) {
-            root = P_data[(int)(root + 1.0) - 1];
+        label = B[i - 1];
+        if (label != 0.0) {
+          root = label;
+          while (P[(int)(root + 1.0) - 1] < root) {
+            root = P[(int)(root + 1.0) - 1];
           }
-          if (b_i != j) {
-            stripeWidth = j;
-            while (P_data[(int)(stripeWidth + 1.0) - 1] < stripeWidth) {
-              stripeWidth = P_data[(int)(stripeWidth + 1.0) - 1];
+          if (label != B[i]) {
+            rootj = B[i];
+            while (P[(int)(rootj + 1.0) - 1] < rootj) {
+              rootj = P[(int)(rootj + 1.0) - 1];
             }
-            if (root > stripeWidth) {
-              root = stripeWidth;
+            if (root > rootj) {
+              root = rootj;
             }
+            rootj = B[i];
             do {
               exitg1 = 0;
-              stripeWidth = P_data[(int)(j + 1.0) - 1];
-              if (stripeWidth < j) {
-                P_data[(int)(j + 1.0) - 1] = root;
-                j = stripeWidth;
+              d = P[(int)(rootj + 1.0) - 1];
+              if (d < rootj) {
+                P[(int)(rootj + 1.0) - 1] = root;
+                rootj = d;
               } else {
                 exitg1 = 1;
               }
             } while (exitg1 == 0);
-            P_data[(int)(j + 1.0) - 1] = root;
+            P[(int)(rootj + 1.0) - 1] = root;
           }
           do {
             exitg1 = 0;
-            stripeWidth = P_data[(int)(b_i + 1.0) - 1];
-            if (stripeWidth < b_i) {
-              P_data[(int)(b_i + 1.0) - 1] = root;
-              b_i = stripeWidth;
+            d = P[(int)(label + 1.0) - 1];
+            if (d < label) {
+              P[(int)(label + 1.0) - 1] = root;
+              label = d;
             } else {
               exitg1 = 1;
             }
           } while (exitg1 == 0);
-          P_data[(int)(b_i + 1.0) - 1] = root;
-          L_data[nParallelStripes + L->size[0] * c] = root;
+          P[(int)(label + 1.0) - 1] = root;
+          B[i] = root;
         }
       }
     }
   }
-  k = 1.0;
+  rootj = 1.0;
   c = 1;
-  while (c <= N) {
-    int b_qY;
+  while (c <= 10) {
+    long long i1;
     if (c < -2147483647) {
-      qY = MIN_int32_T;
+      chunksSizeAndLabels_tmp = MIN_int32_T;
     } else {
-      qY = c - 1;
+      chunksSizeAndLabels_tmp = c - 1;
     }
-    stripeWidth = rt_roundd((double)qY / 2.0) * floor((M + 1.0) / 2.0);
-    if (stripeWidth < 2.147483648E+9) {
-      if (stripeWidth >= -2.147483648E+9) {
-        qY = (int)stripeWidth;
+    i1 = (long long)rt_roundd((double)chunksSizeAndLabels_tmp / 2.0) * 5LL;
+    if (i1 > 2147483647LL) {
+      i1 = 2147483647LL;
+    } else if (i1 < -2147483648LL) {
+      i1 = -2147483648LL;
+    }
+    i = (int)i1 + 2;
+    chunksSizeAndLabels_tmp = chunksSizeAndLabels[c];
+    if (((int)i1 + 1 < 0) &&
+        (chunksSizeAndLabels_tmp < MAX_int32_T - (int)i1)) {
+      chunksSizeAndLabels_tmp = MIN_int32_T;
+    } else if (((int)i1 + 1 > 0) &&
+               (chunksSizeAndLabels_tmp > 2147483646 - (int)i1)) {
+      chunksSizeAndLabels_tmp = MAX_int32_T;
+    } else {
+      chunksSizeAndLabels_tmp = ((int)i1 + chunksSizeAndLabels_tmp) + 1;
+    }
+    for (b_i = i; b_i <= chunksSizeAndLabels_tmp; b_i++) {
+      d = P[b_i - 1];
+      if (d < (double)b_i - 1.0) {
+        P[b_i - 1] = P[(int)(d + 1.0) - 1];
       } else {
-        qY = MIN_int32_T;
-      }
-    } else {
-      qY = MAX_int32_T;
-    }
-    if (qY > 2147483646) {
-      qY = MAX_int32_T;
-    } else {
-      qY++;
-    }
-    if (qY > 2147483646) {
-      b_qY = MAX_int32_T;
-    } else {
-      b_qY = qY + 1;
-    }
-    if (c > 2147483646) {
-      nParallelStripes = MAX_int32_T;
-    } else {
-      nParallelStripes = c + 1;
-    }
-    nParallelStripes = chunksSizeAndLabels_data[nParallelStripes - 1];
-    if ((qY < 0) && (nParallelStripes < MIN_int32_T - qY)) {
-      qY = MIN_int32_T;
-    } else if ((qY > 0) && (nParallelStripes > MAX_int32_T - qY)) {
-      qY = MAX_int32_T;
-    } else {
-      qY += nParallelStripes;
-    }
-    for (nParallelStripes = b_qY; nParallelStripes <= qY; nParallelStripes++) {
-      stripeWidth = P_data[nParallelStripes - 1];
-      if (stripeWidth < (double)nParallelStripes - 1.0) {
-        P_data[nParallelStripes - 1] = P_data[(int)(stripeWidth + 1.0) - 1];
-      } else {
-        P_data[nParallelStripes - 1] = k;
-        k++;
+        P[b_i - 1] = rootj;
+        rootj++;
       }
     }
-    c = chunksSizeAndLabels_data[c - 1];
+    c = chunksSizeAndLabels[c - 1];
   }
-  emxFree_int32_T(&chunksSizeAndLabels);
-  k--;
-  nParallelStripes = (int)N - 1;
-#pragma omp parallel for num_threads(omp_get_max_threads()) private(r)
-
-  for (c_c = 0; c_c <= nParallelStripes; c_c++) {
-    for (r = 0; r < i; r++) {
-      L_data[r + L->size[0] * c_c] =
-          P_data[(int)(L_data[r + L->size[0] * c_c] + 1.0) - 1];
+  *num = rootj - 1.0;
+  for (c = 0; c < 10; c++) {
+    for (r = 0; r < 10; r++) {
+      chunksSizeAndLabels_tmp = c + 10 * r;
+      B[chunksSizeAndLabels_tmp] =
+          P[(int)(B[chunksSizeAndLabels_tmp] + 1.0) - 1];
     }
-  }
-  emxFree_real_T(&P);
-  return k;
-}
-
-static double labelingWu_parallel(const emxArray_uint8_T *im, double M,
-                                  double N, emxArray_real_T *L)
-{
-  emxArray_int32_T *chunksSizeAndLabels;
-  emxArray_real_T *P;
-  double b_c;
-  double c_tmp;
-  double d;
-  double firstLabel;
-  double k;
-  double label;
-  double rootj;
-  double stripeWidth;
-  double *L_data;
-  double *P_data;
-  int c;
-  int c_c;
-  int exitg1;
-  int i;
-  int i1;
-  int nParallelStripes;
-  int qY;
-  int r;
-  int thread;
-  int *chunksSizeAndLabels_data;
-  const unsigned char *im_data;
-  im_data = im->data;
-  i = (int)M;
-  qY = L->size[0] * L->size[1];
-  L->size[0] = (int)M;
-  L->size[1] = (int)N;
-  emxEnsureCapacity_real_T(L, qY);
-  L_data = L->data;
-  emxInit_int32_T(&chunksSizeAndLabels, 1);
-  qY = chunksSizeAndLabels->size[0];
-  chunksSizeAndLabels->size[0] = (int)(N + 8.0);
-  emxEnsureCapacity_int32_T(chunksSizeAndLabels, qY);
-  chunksSizeAndLabels_data = chunksSizeAndLabels->data;
-  nParallelStripes = (int)fmax(1.0, fmin(floor(N / 4.0), 8.0));
-  stripeWidth = ceil(N / (double)nParallelStripes);
-  emxInit_real_T(&P, 1);
-  qY = P->size[0];
-  P->size[0] = (int)(ceil(M * N / 2.0) + 1.0);
-  emxEnsureCapacity_real_T(P, qY);
-  P_data = P->data;
-  P_data[0] = 0.0;
-  nParallelStripes--;
-#pragma omp parallel for num_threads(omp_get_max_threads()) private(           \
-    rootj, b_c, firstLabel, label, c_tmp, d, i1, c_c, r, exitg1)
-
-  for (thread = 0; thread <= nParallelStripes; thread++) {
-    c_tmp = (double)thread * stripeWidth + 1.0;
-    d = ((double)thread + 1.0) * stripeWidth;
-    rootj = rt_roundd(fmin(d + 1.0, N + 1.0));
-    if (rootj < 2.147483648E+9) {
-      if (rootj >= -2.147483648E+9) {
-        i1 = (int)rootj;
-      } else {
-        i1 = MIN_int32_T;
-      }
-    } else {
-      i1 = MAX_int32_T;
-    }
-    chunksSizeAndLabels_data[(int)c_tmp - 1] = i1;
-    label = floor(c_tmp / 2.0) * floor((M + 1.0) / 2.0) + 1.0;
-    firstLabel = label;
-    i1 = (int)(fmin(d, N) + (1.0 - c_tmp));
-    for (c_c = 0; c_c < i1; c_c++) {
-      b_c = c_tmp + (double)c_c;
-      for (r = 0; r < i; r++) {
-        if (im_data[r + im->size[0] * ((int)b_c - 1)] != 0) {
-          if ((b_c > c_tmp) &&
-              (im_data[r + im->size[0] * ((int)b_c - 2)] != 0)) {
-            L_data[r + L->size[0] * ((int)b_c - 1)] =
-                L_data[r + L->size[0] * ((int)b_c - 2)];
-          } else if (((double)r + 1.0 < M) && (b_c > c_tmp) &&
-                     (im_data[(r + im->size[0] * ((int)b_c - 2)) + 1] != 0)) {
-            if ((b_c > c_tmp) && ((unsigned int)r + 1U > 1U) &&
-                (im_data[(r + im->size[0] * ((int)b_c - 2)) - 1] != 0)) {
-              L_data[r + L->size[0] * ((int)b_c - 1)] =
-                  L_data[(r + L->size[0] * ((int)b_c - 2)) - 1];
-              do {
-                exitg1 = 0;
-                d = L_data[r + L->size[0] * ((int)b_c - 1)];
-                if (P_data[(int)(d + 1.0) - 1] < d) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] =
-                      P_data[(int)(d + 1.0) - 1];
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              rootj = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-              if (L_data[(r + L->size[0] * ((int)b_c - 2)) - 1] != rootj) {
-                while (P_data[(int)(rootj + 1.0) - 1] < rootj) {
-                  rootj = P_data[(int)(rootj + 1.0) - 1];
-                }
-                if (d > rootj) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] = rootj;
-                }
-                do {
-                  exitg1 = 0;
-                  d = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-                  rootj = P_data[(int)(d + 1.0) - 1];
-                  if (rootj < d) {
-                    P_data[(int)(d + 1.0) - 1] =
-                        L_data[r + L->size[0] * ((int)b_c - 1)];
-                    L_data[(r + L->size[0] * ((int)b_c - 2)) + 1] = rootj;
-                  } else {
-                    exitg1 = 1;
-                  }
-                } while (exitg1 == 0);
-                P_data[(int)(d + 1.0) - 1] =
-                    L_data[r + L->size[0] * ((int)b_c - 1)];
-              }
-              do {
-                exitg1 = 0;
-                d = L_data[(r + L->size[0] * ((int)b_c - 2)) - 1];
-                rootj = P_data[(int)(d + 1.0) - 1];
-                if (rootj < d) {
-                  P_data[(int)(d + 1.0) - 1] =
-                      L_data[r + L->size[0] * ((int)b_c - 1)];
-                  L_data[(r + L->size[0] * ((int)b_c - 2)) - 1] = rootj;
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              P_data[(int)(d + 1.0) - 1] =
-                  L_data[r + L->size[0] * ((int)b_c - 1)];
-            } else if (((unsigned int)r + 1U > 1U) &&
-                       (im_data[(r + im->size[0] * ((int)b_c - 1)) - 1] != 0)) {
-              L_data[r + L->size[0] * ((int)b_c - 1)] =
-                  L_data[(r + L->size[0] * ((int)b_c - 1)) - 1];
-              do {
-                exitg1 = 0;
-                d = L_data[r + L->size[0] * ((int)b_c - 1)];
-                if (P_data[(int)(d + 1.0) - 1] < d) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] =
-                      P_data[(int)(d + 1.0) - 1];
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              rootj = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-              if (L_data[(r + L->size[0] * ((int)b_c - 1)) - 1] != rootj) {
-                while (P_data[(int)(rootj + 1.0) - 1] < rootj) {
-                  rootj = P_data[(int)(rootj + 1.0) - 1];
-                }
-                if (d > rootj) {
-                  L_data[r + L->size[0] * ((int)b_c - 1)] = rootj;
-                }
-                do {
-                  exitg1 = 0;
-                  d = L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-                  rootj = P_data[(int)(d + 1.0) - 1];
-                  if (rootj < d) {
-                    P_data[(int)(d + 1.0) - 1] =
-                        L_data[r + L->size[0] * ((int)b_c - 1)];
-                    L_data[(r + L->size[0] * ((int)b_c - 2)) + 1] = rootj;
-                  } else {
-                    exitg1 = 1;
-                  }
-                } while (exitg1 == 0);
-                P_data[(int)(d + 1.0) - 1] =
-                    L_data[r + L->size[0] * ((int)b_c - 1)];
-              }
-              do {
-                exitg1 = 0;
-                d = L_data[(r + L->size[0] * ((int)b_c - 1)) - 1];
-                rootj = P_data[(int)(d + 1.0) - 1];
-                if (rootj < d) {
-                  P_data[(int)(d + 1.0) - 1] =
-                      L_data[r + L->size[0] * ((int)b_c - 1)];
-                  L_data[(r + L->size[0] * ((int)b_c - 1)) - 1] = rootj;
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              P_data[(int)(d + 1.0) - 1] =
-                  L_data[r + L->size[0] * ((int)b_c - 1)];
-            } else {
-              L_data[r + L->size[0] * ((int)b_c - 1)] =
-                  L_data[(r + L->size[0] * ((int)b_c - 2)) + 1];
-            }
-          } else if ((b_c > c_tmp) && ((unsigned int)r + 1U > 1U) &&
-                     (im_data[(r + im->size[0] * ((int)b_c - 2)) - 1] != 0)) {
-            L_data[r + L->size[0] * ((int)b_c - 1)] =
-                L_data[(r + L->size[0] * ((int)b_c - 2)) - 1];
-          } else if (((unsigned int)r + 1U > 1U) &&
-                     (im_data[(r + im->size[0] * ((int)b_c - 1)) - 1] != 0)) {
-            L_data[r + L->size[0] * ((int)b_c - 1)] =
-                L_data[(r + L->size[0] * ((int)b_c - 1)) - 1];
-          } else {
-            L_data[r + L->size[0] * ((int)b_c - 1)] = label;
-            P_data[(int)(label + 1.0) - 1] = label;
-            label++;
-          }
-        } else {
-          L_data[r + L->size[0] * ((int)b_c - 1)] = 0.0;
-        }
-      }
-    }
-    d = label - firstLabel;
-    if (d < 2.147483648E+9) {
-      if (d >= -2.147483648E+9) {
-        i1 = (int)d;
-      } else {
-        i1 = MIN_int32_T;
-      }
-    } else {
-      i1 = MAX_int32_T;
-    }
-    chunksSizeAndLabels_data[(int)(c_tmp + 1.0) - 1] = i1;
-  }
-  for (c = chunksSizeAndLabels_data[0] - 1; c + 1 <= N;
-       c = chunksSizeAndLabels_data[c] - 1) {
-    for (nParallelStripes = 0; nParallelStripes < i; nParallelStripes++) {
-      if (L_data[nParallelStripes + L->size[0] * c] != 0.0) {
-        double b_i;
-        double j;
-        double root;
-        if ((unsigned int)nParallelStripes + 1U > 1U) {
-          b_i = L_data[(nParallelStripes + L->size[0] * (c - 1)) - 1];
-          if (b_i != 0.0) {
-            j = L_data[nParallelStripes + L->size[0] * c];
-            root = b_i;
-            while (P_data[(int)(root + 1.0) - 1] < root) {
-              root = P_data[(int)(root + 1.0) - 1];
-            }
-            if (b_i != j) {
-              stripeWidth = j;
-              while (P_data[(int)(stripeWidth + 1.0) - 1] < stripeWidth) {
-                stripeWidth = P_data[(int)(stripeWidth + 1.0) - 1];
-              }
-              if (root > stripeWidth) {
-                root = stripeWidth;
-              }
-              do {
-                exitg1 = 0;
-                stripeWidth = P_data[(int)(j + 1.0) - 1];
-                if (stripeWidth < j) {
-                  P_data[(int)(j + 1.0) - 1] = root;
-                  j = stripeWidth;
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              P_data[(int)(j + 1.0) - 1] = root;
-            }
-            do {
-              exitg1 = 0;
-              stripeWidth = P_data[(int)(b_i + 1.0) - 1];
-              if (stripeWidth < b_i) {
-                P_data[(int)(b_i + 1.0) - 1] = root;
-                b_i = stripeWidth;
-              } else {
-                exitg1 = 1;
-              }
-            } while (exitg1 == 0);
-            P_data[(int)(b_i + 1.0) - 1] = root;
-            L_data[nParallelStripes + L->size[0] * c] = root;
-          }
-        }
-        if ((double)nParallelStripes + 1.0 < M) {
-          b_i = L_data[(nParallelStripes + L->size[0] * (c - 1)) + 1];
-          if (b_i != 0.0) {
-            j = L_data[nParallelStripes + L->size[0] * c];
-            root = b_i;
-            while (P_data[(int)(root + 1.0) - 1] < root) {
-              root = P_data[(int)(root + 1.0) - 1];
-            }
-            if (b_i != j) {
-              stripeWidth = j;
-              while (P_data[(int)(stripeWidth + 1.0) - 1] < stripeWidth) {
-                stripeWidth = P_data[(int)(stripeWidth + 1.0) - 1];
-              }
-              if (root > stripeWidth) {
-                root = stripeWidth;
-              }
-              do {
-                exitg1 = 0;
-                stripeWidth = P_data[(int)(j + 1.0) - 1];
-                if (stripeWidth < j) {
-                  P_data[(int)(j + 1.0) - 1] = root;
-                  j = stripeWidth;
-                } else {
-                  exitg1 = 1;
-                }
-              } while (exitg1 == 0);
-              P_data[(int)(j + 1.0) - 1] = root;
-            }
-            do {
-              exitg1 = 0;
-              stripeWidth = P_data[(int)(b_i + 1.0) - 1];
-              if (stripeWidth < b_i) {
-                P_data[(int)(b_i + 1.0) - 1] = root;
-                b_i = stripeWidth;
-              } else {
-                exitg1 = 1;
-              }
-            } while (exitg1 == 0);
-            P_data[(int)(b_i + 1.0) - 1] = root;
-            L_data[nParallelStripes + L->size[0] * c] = root;
-          }
-        }
-        b_i = L_data[nParallelStripes + L->size[0] * (c - 1)];
-        if (b_i != 0.0) {
-          j = L_data[nParallelStripes + L->size[0] * c];
-          root = b_i;
-          while (P_data[(int)(root + 1.0) - 1] < root) {
-            root = P_data[(int)(root + 1.0) - 1];
-          }
-          if (b_i != j) {
-            stripeWidth = j;
-            while (P_data[(int)(stripeWidth + 1.0) - 1] < stripeWidth) {
-              stripeWidth = P_data[(int)(stripeWidth + 1.0) - 1];
-            }
-            if (root > stripeWidth) {
-              root = stripeWidth;
-            }
-            do {
-              exitg1 = 0;
-              stripeWidth = P_data[(int)(j + 1.0) - 1];
-              if (stripeWidth < j) {
-                P_data[(int)(j + 1.0) - 1] = root;
-                j = stripeWidth;
-              } else {
-                exitg1 = 1;
-              }
-            } while (exitg1 == 0);
-            P_data[(int)(j + 1.0) - 1] = root;
-          }
-          do {
-            exitg1 = 0;
-            stripeWidth = P_data[(int)(b_i + 1.0) - 1];
-            if (stripeWidth < b_i) {
-              P_data[(int)(b_i + 1.0) - 1] = root;
-              b_i = stripeWidth;
-            } else {
-              exitg1 = 1;
-            }
-          } while (exitg1 == 0);
-          P_data[(int)(b_i + 1.0) - 1] = root;
-          L_data[nParallelStripes + L->size[0] * c] = root;
-        }
-      }
-    }
-  }
-  k = 1.0;
-  c = 1;
-  while (c <= N) {
-    int b_qY;
-    if (c < -2147483647) {
-      qY = MIN_int32_T;
-    } else {
-      qY = c - 1;
-    }
-    stripeWidth = rt_roundd((double)qY / 2.0) * floor((M + 1.0) / 2.0);
-    if (stripeWidth < 2.147483648E+9) {
-      if (stripeWidth >= -2.147483648E+9) {
-        qY = (int)stripeWidth;
-      } else {
-        qY = MIN_int32_T;
-      }
-    } else {
-      qY = MAX_int32_T;
-    }
-    if (qY > 2147483646) {
-      qY = MAX_int32_T;
-    } else {
-      qY++;
-    }
-    if (qY > 2147483646) {
-      b_qY = MAX_int32_T;
-    } else {
-      b_qY = qY + 1;
-    }
-    if (c > 2147483646) {
-      nParallelStripes = MAX_int32_T;
-    } else {
-      nParallelStripes = c + 1;
-    }
-    nParallelStripes = chunksSizeAndLabels_data[nParallelStripes - 1];
-    if ((qY < 0) && (nParallelStripes < MIN_int32_T - qY)) {
-      qY = MIN_int32_T;
-    } else if ((qY > 0) && (nParallelStripes > MAX_int32_T - qY)) {
-      qY = MAX_int32_T;
-    } else {
-      qY += nParallelStripes;
-    }
-    for (nParallelStripes = b_qY; nParallelStripes <= qY; nParallelStripes++) {
-      stripeWidth = P_data[nParallelStripes - 1];
-      if (stripeWidth < (double)nParallelStripes - 1.0) {
-        P_data[nParallelStripes - 1] = P_data[(int)(stripeWidth + 1.0) - 1];
-      } else {
-        P_data[nParallelStripes - 1] = k;
-        k++;
-      }
-    }
-    c = chunksSizeAndLabels_data[c - 1];
-  }
-  emxFree_int32_T(&chunksSizeAndLabels);
-  k--;
-  nParallelStripes = (int)N - 1;
-#pragma omp parallel for num_threads(omp_get_max_threads()) private(r)
-
-  for (c_c = 0; c_c <= nParallelStripes; c_c++) {
-    for (r = 0; r < i; r++) {
-      L_data[r + L->size[0] * c_c] =
-          P_data[(int)(L_data[r + L->size[0] * c_c] + 1.0) - 1];
-    }
-  }
-  emxFree_real_T(&P);
-  return k;
-}
-
-double b_bwlabel(const emxArray_boolean_T *varargin_1, emxArray_real_T *L)
-{
-  double numComponents;
-  double *L_data;
-  int i;
-  numComponents = 0.0;
-  if ((varargin_1->size[0] == 0) || (varargin_1->size[1] == 0)) {
-    int loop_ub;
-    i = L->size[0] * L->size[1];
-    L->size[0] = varargin_1->size[0];
-    L->size[1] = varargin_1->size[1];
-    emxEnsureCapacity_real_T(L, i);
-    L_data = L->data;
-    loop_ub = varargin_1->size[0] * varargin_1->size[1];
-    for (i = 0; i < loop_ub; i++) {
-      L_data[i] = 0.0;
-    }
-  } else {
-    numComponents = b_labelingWu_parallel(varargin_1, varargin_1->size[0],
-                                          varargin_1->size[1], L);
-  }
-  return numComponents;
-}
-
-void bwlabel(const emxArray_uint8_T *varargin_1, emxArray_real_T *L)
-{
-  double *L_data;
-  int i;
-  if ((varargin_1->size[0] == 0) || (varargin_1->size[1] == 0)) {
-    int loop_ub;
-    i = L->size[0] * L->size[1];
-    L->size[0] = varargin_1->size[0];
-    L->size[1] = varargin_1->size[1];
-    emxEnsureCapacity_real_T(L, i);
-    L_data = L->data;
-    loop_ub = varargin_1->size[0] * varargin_1->size[1];
-    for (i = 0; i < loop_ub; i++) {
-      L_data[i] = 0.0;
-    }
-  } else {
-    labelingWu_parallel(varargin_1, varargin_1->size[0], varargin_1->size[1],
-                        L);
   }
 }
 
-/* End of code generation (bwlabel.c) */
+/*
+ * File trailer for bwlabell.c
+ *
+ * [EOF]
+ */

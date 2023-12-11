@@ -5,22 +5,23 @@
  * File: imfil.h
  *
  * MATLAB Coder version            : 23.2
- * C/C++ source code generated on  : 25-Nov-2023 21:06:03
+ * C/C++ source code generated on  : 26-Nov-2023 20:14:52
  */
 
-#ifndef IMFILL_H
-#define IMFILL_H
+#ifndef VIEWGEO_H
+#define VIEWGEO_H
 
 /* Include Files */
 #include "rtwtypes.h"
-#include "size.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Function Declarations */
-void imfill(const float A[IMG_SIZE_ITER], float B[IMG_SIZE_ITER]);
+extern void viewgeo(const unsigned char test[100], double *A, double *B, double *C,
+           double *omiga_par, double *omiga_per);
 
 #ifdef __cplusplus
 }

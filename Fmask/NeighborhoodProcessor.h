@@ -2,14 +2,14 @@
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
- * File: minOrMax.h
+ * File: NeighborhoodProcessor.h
  *
  * MATLAB Coder version            : 23.2
  * C/C++ source code generated on  : 04-Dec-2023 17:32:24
  */
 
-#ifndef MINORMAX_H
-#define MINORMAX_H
+#ifndef NEIGHBORHOODPROCESSOR_H
+#define NEIGHBORHOODPROCESSOR_H
 
 /* Include Files */
 #include "rtwtypes.h"
@@ -21,11 +21,10 @@ extern "C" {
 #endif
 
 /* Function Declarations */
-float fmaximum(const float x_data[], int x_size);
-
-double maximum(const double x_data[], int x_size, int *idx);
-
-double minimum(const double x_data[], int x_size, int *idx);
+void c_NeighborhoodProcessor_compute(const int imSize[2], const bool nhConn[9],
+                                     int loffsets[5], int linds[5],
+                                     int soffsets[10], int interiorStart[2],
+                                     int interiorEnd[2]);
 
 #ifdef __cplusplus
 }
@@ -33,7 +32,7 @@ double minimum(const double x_data[], int x_size, int *idx);
 
 #endif
 /*
- * File trailer for minOrMax.h
+ * File trailer for NeighborhoodProcessor.h
  *
  * [EOF]
  */
