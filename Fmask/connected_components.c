@@ -33,8 +33,8 @@ void connected_components(const double L[100], const double num_el, const int wi
 {
     double i_d = 1.0;
     int i_i;
-    int x = 0;
-    int y = 0;
+    int x = 1;
+    int y = 1;
     int j = 0;
     int l = 0;
     int s = 0;
@@ -51,8 +51,8 @@ void connected_components(const double L[100], const double num_el, const int wi
             }
 
             x++;
-            if (x == width) {
-                x = 0;
+            if (x == width+1) {
+                x = 1;
                 y++;
             }
         }

@@ -83,18 +83,45 @@ double Fmask(double cldpix, double sdpix, double snpix, double cldprob,
       Lnum, doy, im_B1_data, im_B2_data, im_B3_data,im_B4_data,
       im_B5_data, im_B7_data, Cloud_m_pointer, Shadow_m_pointer, Water_m_pointer,
       Snow_m_pointer, &data);
+      
+  printf("Cloud\n");
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      int aux = i * 10 + j;
+      printf("%u, ", Cloud_m_pointer[aux]);
+    }
+    printf("\n");
+  }
 
-  // for (i = 0; i < IMG_SIZE_ITER; i++) {
-  //   if (Cloud_m_pointer[i] == 1U)
-  //     printf("Un pixel de nube\n");
-  // }
+  printf("Shadow\n");
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      int aux = i * 10 + j;
+      printf("%u, ", Shadow_m_pointer[aux]);
+    }
+    printf("\n");
+  }
 
-  //   Cloud_m_pointer += IMG_SIZE_ITER;
-  //   Water_m_pointer += IMG_SIZE_ITER;
-  //   Shadow_m_pointer += IMG_SIZE_ITER;
-  //   Snow_m_pointer += IMG_SIZE_ITER;
-  //   pos += IMG_SIZE_ITER;
-  // }
+  printf("Water\n");
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      int aux = i * 10 + j;
+      printf("%u, ", Water_m_pointer[aux]);
+    }
+    printf("\n");
+  }
+
+  printf("Snow\n");
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      int aux = i * 10 + j;
+      printf("%u, ", Snow_m_pointer[aux]);
+    }
+    printf("\n");
+  }
+
+
+
 
   printf("Fin del bucle\n");
 

@@ -46,12 +46,35 @@ void mat_truecloud(double *x, double *y,
                           double *x_new, double *y_new)
 {
   int i;
+  int j;
   double aux;
   double H = 70500.0;
   double divid = h/(H*sqrt(A*A+B*B)*cos(omiga_per-omiga_par));
 
+  printf("x=\n");
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      int aux = i * 10 + j;
+      printf("%f, ", x[aux]);
+    }
+    printf("\n");
+  }
+
+  printf("y=\n");
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 10; j++) {
+      int aux = i * 10 + j;
+      printf("%f, ", y[aux]);
+    }
+    printf("\n");
+  }
+
+  printf("n= %d\n",n);
   for (i = 0; i < n; i++) {
     aux = (x[i]*A+y[i]*B+C)*divid;
+    printf("aux=%f\n",aux);
+    printf("cos=%f\n",cos(omiga_par));
+    printf("sin=%f\n",sin(omiga_par));
     x_new[i] = aux*cos(omiga_par)+x[i];
     y_new[i] = aux*sin(omiga_par)+y[i];
   }
@@ -137,7 +160,7 @@ int filter(int sizes[MAX_REGION], double *num_el, unsigned char im[IMG_SIZE],
     for (i = 0; i < num_sizes; i++) {
       if (sizes[i] >= threshold) {
           for (j = 0; j < sizes[i]; j++) {
-            int tmpId = orin_y[size_old+j] * width + orin_x[size_old+j];
+            int tmpId = (orin_y[size_old+j]-1) * width + (orin_x[size_old+j]-1);
             im[tmpId] = 1U;
             if (i != k) {
               orin_x[size_new+j] = orin_x[size_old+j];
@@ -154,6 +177,13 @@ int filter(int sizes[MAX_REGION], double *num_el, unsigned char im[IMG_SIZE],
     *num_el = (double)k;
 
   return k;
+}
+
+int iroundd(double d) {
+  if (d < 0)
+    return (int)(d-0.5);
+  else
+    return (int)(d+0.5);
 }
 
 double fcssm(double Sun_zen, double Sun_azi, double ptm,
@@ -501,7 +531,7 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
     for (i = 0; i < num; i++) {
       int tmp_id;
       for (j = 0; j < cloud_sizes[i]; j++) {
-        tmp_id = orin_y[size_xy] * win_width + orin_x[size_xy];
+        tmp_id = (orin_y[size_xy]-1) * win_width + (orin_x[size_xy]-1);
 
         segm_cloud_init_data[tmp_id] = (double)i;
         size_xy++;
@@ -522,10 +552,10 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
     /*  Calulate the moving cloud shadow */
     /*  height_num=zeros(1,num); % cloud relative height (m) */
     /*  cloud shadow match similarity (m) */
-    for (cloud_type = 1; cloud_type < num; cloud_type++) {
+    for (cloud_type = 1; cloud_type <= num; cloud_type++) {
       double record_h;
       double base_h;
-      int num_el = cloud_sizes[cloud_type];
+      int num_el = cloud_sizes[cloud_type-1];
       bool exitg1;
       
       /* fprintf('Shadow Match of the %d/%d_th cloud with %d */
@@ -559,7 +589,7 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
       /*           Max_cl_height=min(Max_cl_height,10*(t_temph+400-t_obj)); */
       /*  initialize height and similarity info */
 
-      for (base_h = Min_cl_height; base_h < Max_cl_height; base_h += i_step ) {
+      for (base_h = Min_cl_height; base_h < 500; base_h += i_step ) {
         double matched_all;
         double total_all;
 
@@ -572,6 +602,17 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
         int *tmp_srow = idata2;
         int *tmp_scol = idata3;
 
+        printf("base_h=%f\n",base_h);
+
+        printf("orin_x\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%f, ", orin_x[aux]);
+          }
+          printf("\n");
+        }
+
 
 
         /*  iterate in height (m) */
@@ -582,38 +623,75 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
         /*  shadow moved distance (pixel) */
         /*  i_xy=h*cos(sun_tazi_rad)/(sub_size*tan(sun_ele_rad)); */
 
+        printf("tmp_x\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%f, ", tmp_x[aux]);
+          }
+          printf("\n");
+        }
+
+        printf("tmp_y\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%f, ", tmp_y[aux]);
+          }
+          printf("\n");
+        }
+
         
         i_xy=base_h/(sub_size*tan(sun_ele_rad));
+
+        printf("i_xy=%f",i_xy);
         if (Sun_azi < 180.0) {
           /*  X is for col j,2 */
-          double aux_cos = i_xy*cos(sun_tazi_rad)-0.5;
+          double aux_cos = i_xy*cos(sun_tazi_rad);
           for (i = 0; i < num_el; i++) {
-            tmp_scol[i] = (int)(tmp_x[i]-aux_cos);
+            tmp_scol[i] = iroundd(tmp_x[i]-aux_cos);
           }
           /*  Y is for row i,1 */
-          double aux_sin = i_xy*sin(sun_tazi_rad)-0.5;
+          double aux_sin = i_xy*sin(sun_tazi_rad);
           for (i = 0; i < num_el; i++) {
-            tmp_srow[i] = (int)(tmp_y[i]-aux_sin);
+            tmp_srow[i] = iroundd(tmp_y[i]-aux_sin);
           }
         } else {
           /*  X is for col j,2 */
-          double aux_cos = i_xy*cos(sun_tazi_rad)+0.5;
+          double aux_cos = i_xy*cos(sun_tazi_rad);
           for (i = 0; i < num_el; i++) {
-            tmp_scol[i] = (int)(tmp_x[i]+aux_cos);
+            tmp_scol[i] = iroundd(tmp_x[i]+aux_cos);
           }
           /*  Y is for row i,1 */
-          double aux_sin = i_xy*sin(sun_tazi_rad)+0.5;
+          double aux_sin = i_xy*sin(sun_tazi_rad);
           for (i = 0; i < num_el; i++) {
-            tmp_srow[i] = (int)(tmp_y[i]+aux_sin);
+            tmp_srow[i] = iroundd(tmp_y[i]+aux_sin);
           }
         }
         /*  col */
         /*  row */
         /*  the id that is out of the image */
+        printf("tmp_scol\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%d, ", tmp_scol[aux]);
+          }
+          printf("\n");
+        }
+
+        printf("tmp_srow\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%d, ", tmp_srow[aux]);
+          }
+          printf("\n");
+        }
         
         /*  the id that is matched (exclude original cloud) */
         for (i = 0; i < num_el; i++) {
-          if (tmp_srow[i] < 0 || tmp_srow[i] >= win_height || tmp_scol[i] < 0 || tmp_scol[i] >= win_width)
+          if (tmp_srow[i] < 1 || tmp_srow[i] > win_height || tmp_scol[i] < 1 || tmp_scol[i] > win_width)
             out_all++;
           else if (k != i) {
             tmp_srow[k] = tmp_srow[i];
@@ -624,6 +702,24 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
             k++;
         }
 
+        printf("tmp_scol\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%d, ", tmp_scol[aux]);
+          }
+          printf("\n");
+        }
+
+        printf("tmp_srow\n");
+        for (i = 0; i < 10; i++) {
+          for (j = 0; j < 10; j++) {
+            int aux = i * 10 + j;
+            printf("%d, ", tmp_srow[aux]);
+          }
+          printf("\n");
+        }
+
 
 
         /*  the id that is the total pixel (exclude original cloud) */
@@ -632,7 +728,7 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
         total_all = out_all;
 
         for (i = 0; i < k; i++) {
-          int tmp_id = tmp_srow[i] * win_width + tmp_scol[i];
+          int tmp_id = (tmp_srow[i]-1) * win_width + (tmp_scol[i]-1);
           if (boundary_test_data[i] == 0 || (segm_cloud_data[tmp_id] != cloud_type
             && (cloud_test_data[tmp_id] > 0 || shadow_test_data[tmp_id] == 1))) {
               matched_all++;
@@ -640,6 +736,10 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
           else if (cloud_test_data[tmp_id] != cloud_type)
             total_all++;
         }
+
+        printf("matched_all=%f\n",matched_all);
+        printf("total_all=%f\n",total_all);
+
 
         thresh_match = matched_all/total_all;
         
@@ -662,25 +762,25 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
 
           if (Sun_azi < 180.0) {
             /*  X is for col j,2 */
-            double aux_cos = i_vir*cos(sun_tazi_rad)-0.5;
+            double aux_cos = i_vir*cos(sun_tazi_rad);
             for (i = 0; i < num_el; i++) {
-              tmp_scol[i] = (int)(tmp_x[i]-aux_cos);
+              tmp_scol[i] = iroundd(tmp_x[i]-aux_cos);
             }
             /*  Y is for row i,1 */
-            double aux_sin = i_vir*sin(sun_tazi_rad)-0.5;
+            double aux_sin = i_vir*sin(sun_tazi_rad);
             for (i = 0; i < num_el; i++) {
-              tmp_srow[i] = (int)(tmp_y[i]-aux_sin);
+              tmp_srow[i] = iroundd(tmp_y[i]-aux_sin);
             }
           } else {
             /*  X is for col j,2 */
-            double aux_cos = i_vir*cos(sun_tazi_rad)+0.5;
+            double aux_cos = i_vir*cos(sun_tazi_rad);
             for (i = 0; i < num_el; i++) {
-              tmp_scol[i] = (int)(tmp_x[i]+aux_cos);
+              tmp_scol[i] = iroundd(tmp_x[i]+aux_cos);
             }
             /*  Y is for row i,1 */
-            double aux_sin = i_vir*sin(sun_tazi_rad)+0.5;
+            double aux_sin = i_vir*sin(sun_tazi_rad);
             for (i = 0; i < num_el; i++) {
-              tmp_srow[i] = (int)(tmp_y[i]+aux_sin);
+              tmp_srow[i] = iroundd(tmp_y[i]+aux_sin);
             }
           }
 
@@ -689,22 +789,40 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
 
 
           for (i = 0; i < num_el; i++) {
-            if (tmp_srow[i] < 0)
-              tmp_srow[i] = 0;
-            else if (tmp_srow[i] >= win_height)
-              tmp_srow[i] = win_height-1;
+            if (tmp_srow[i] <= 0)
+              tmp_srow[i] = 1;
+            else if (tmp_srow[i] > win_height)
+              tmp_srow[i] = win_height;
             
-            if (tmp_scol < 0)
-              tmp_scol[i] = 0;
-            else if (tmp_scol >= win_width)
-              tmp_scol[i] = win_width-1;
+            if (tmp_scol[i] <= 0)
+              tmp_scol[i] = 1;
+            else if (tmp_scol[i] >= win_width)
+              tmp_scol[i] = win_width;
+          }
+
+          printf("tmp_scol\n");
+          for (i = 0; i < 10; i++) {
+            for (j = 0; j < 10; j++) {
+              int aux = i * 10 + j;
+              printf("%d, ", tmp_scol[aux]);
+            }
+            printf("\n");
+          }
+
+          printf("tmp_srow\n");
+          for (i = 0; i < 10; i++) {
+            for (j = 0; j < 10; j++) {
+              int aux = i * 10 + j;
+              printf("%d, ", tmp_srow[aux]);
+            }
+            printf("\n");
           }
 
 
           /*  give shadow_cal=1 */
 
           for (i = 0; i < num_el; i++) {
-            shadow_cal_data[tmp_srow[i] * win_width + tmp_scol[i]] = 1;
+            shadow_cal_data[(tmp_srow[i]-1) * win_width + (tmp_scol[i]-1)] = 1U;
           }
 
           /*  record matched cloud */
@@ -712,7 +830,7 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
           /*  cloud_height(orin_cid)=record_h; */
           /*  fprintf('cloud_type = %d & base_h = %d & rt_obj
            * =%d\n',cloud_type,base_h,t_obj); */
-
+          break;
         } else {
           record_thresh = 0.0;
         }
@@ -727,8 +845,17 @@ double fcssm(double Sun_zen, double Sun_azi, double ptm,
     /*     sdpix=3; % number of pixels to be dilated for shadow */
     /*     fprintf('Dilate %d pixels for cloud & %d pixels for shadow
      * objects\n',cldpix,sdpix); */
+
+
     imdilate(shadow_cal_data, 2*((int)sdpix)+1);
-    
+    printf("shadow\n");
+    for (i = 0; i < 10; i++) {
+      for (j = 0; j < 10; j++) {
+        int aux = i * 10 + j;
+        printf("%d, ", shadow_cal_data[aux]);
+      }
+      printf("\n");
+    }   
     /*  dialte shadow first */
     imdilate(cloud_cal_data, 2*((int)cldpix)+1);
     

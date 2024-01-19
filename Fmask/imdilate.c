@@ -55,7 +55,7 @@ void imdilate(unsigned char L[IMG_SIZE], int k)
                 for (m = 1; m <= k/2; m++) {
                     for (n = (-k+1)/2; n <= k/2; n++) {
                         if ((i + m < 10) && (j + n >= 0) && (j + n < 10) && L[(i + m) * 10 + (j + n)] != 1U) {
-                            L[(i + m) * 10 + (j + n)] = 1;
+                            L[(i + m) * 10 + (j + n)] = 2U;
                         }
                     }
                 }

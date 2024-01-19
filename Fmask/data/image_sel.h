@@ -1,4 +1,4 @@
 #ifndef IMG
-#define IMG 2
+#define IMG 3
 
 #endif

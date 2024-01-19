@@ -49,8 +49,8 @@ const double reso_thm[2] = {30, 30};
 const double ul[] = {313200, 4576800};
 const double zc[] = {30, 30};
 const double zen = 39.7293;
-const double ijdim_ref[2] = {500, 500};
-const double ijdim_thm[2] = {500, 500};
+const double ijdim_ref[2] = {10, 10};
+const double ijdim_thm[2] = {10, 10};
 const double Lmax[9] = {293.7, 300.9, 234.4, 241.1, 47.57, 17.04, 16.54, 0, 0};
 const double Lmin[9] = {-6.2, -6.4, -5, -5.1, -1, 0, -0.35, 0, 0};
 const double Qcalmax[9] = {255, 255, 255, 255, 255, 255, 255, 0, 0};
@@ -60,7 +60,7 @@ const double Refmin[7] = {0, 0, 0, 0, 0, 0, 0};
 
 const char name[] = "LE07_L1TP_201032_20220622_20220719_02_T1";
 const char sensor[] = "L_ETM_PLUS";
-const float dim[] = {500, 500};
+const float dim[] = {10, 10};
 
 int main(int argc, char **argv)
 {
